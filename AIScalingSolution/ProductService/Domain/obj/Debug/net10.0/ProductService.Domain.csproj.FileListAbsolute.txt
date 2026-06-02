@@ -1,0 +1,11 @@
+C:\Users\Timeyin.egbe\source\repos\AIScalingSolution\ProductService\Domain\bin\Debug\net10.0\ProductService.Domain.deps.json
+C:\Users\Timeyin.egbe\source\repos\AIScalingSolution\ProductService\Domain\bin\Debug\net10.0\ProductService.Domain.dll
+C:\Users\Timeyin.egbe\source\repos\AIScalingSolution\ProductService\Domain\bin\Debug\net10.0\ProductService.Domain.pdb
+C:\Users\Timeyin.egbe\source\repos\AIScalingSolution\ProductService\Domain\obj\Debug\net10.0\ProductService.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Timeyin.egbe\source\repos\AIScalingSolution\ProductService\Domain\obj\Debug\net10.0\ProductService.Domain.AssemblyInfoInputs.cache
+C:\Users\Timeyin.egbe\source\repos\AIScalingSolution\ProductService\Domain\obj\Debug\net10.0\ProductService.Domain.AssemblyInfo.cs
+C:\Users\Timeyin.egbe\source\repos\AIScalingSolution\ProductService\Domain\obj\Debug\net10.0\ProductService.Domain.csproj.CoreCompileInputs.cache
+C:\Users\Timeyin.egbe\source\repos\AIScalingSolution\ProductService\Domain\obj\Debug\net10.0\ProductService.Domain.dll
+C:\Users\Timeyin.egbe\source\repos\AIScalingSolution\ProductService\Domain\obj\Debug\net10.0\refint\ProductService.Domain.dll
+C:\Users\Timeyin.egbe\source\repos\AIScalingSolution\ProductService\Domain\obj\Debug\net10.0\ProductService.Domain.pdb
+C:\Users\Timeyin.egbe\source\repos\AIScalingSolution\ProductService\Domain\obj\Debug\net10.0\ref\ProductService.Domain.dll

@@ -1,0 +1,14 @@
+c:\Users\Timeyin.egbe\source\repos\AIScalingSolution\Infrastructure\AIScaling.PredictiveMiddleware\obj\Debug\net8.0\AIScaling.PredictiveMiddleware.csproj.AssemblyReference.cache
+c:\Users\Timeyin.egbe\source\repos\AIScalingSolution\Infrastructure\AIScaling.PredictiveMiddleware\obj\Debug\net8.0\AIScaling.PredictiveMiddleware.GeneratedMSBuildEditorConfig.editorconfig
+c:\Users\Timeyin.egbe\source\repos\AIScalingSolution\Infrastructure\AIScaling.PredictiveMiddleware\obj\Debug\net8.0\AIScaling.PredictiveMiddleware.AssemblyInfoInputs.cache
+c:\Users\Timeyin.egbe\source\repos\AIScalingSolution\Infrastructure\AIScaling.PredictiveMiddleware\obj\Debug\net8.0\AIScaling.PredictiveMiddleware.AssemblyInfo.cs
+c:\Users\Timeyin.egbe\source\repos\AIScalingSolution\Infrastructure\AIScaling.PredictiveMiddleware\obj\Debug\net8.0\AIScaling.PredictiveMiddleware.csproj.CoreCompileInputs.cache
+c:\Users\Timeyin.egbe\source\repos\AIScalingSolution\Infrastructure\AIScaling.PredictiveMiddleware\bin\Debug\net8.0\AIScaling.PredictiveMiddleware.deps.json
+c:\Users\Timeyin.egbe\source\repos\AIScalingSolution\Infrastructure\AIScaling.PredictiveMiddleware\bin\Debug\net8.0\AIScaling.PredictiveMiddleware.dll
+c:\Users\Timeyin.egbe\source\repos\AIScalingSolution\Infrastructure\AIScaling.PredictiveMiddleware\bin\Debug\net8.0\AIScaling.PredictiveMiddleware.pdb
+c:\Users\Timeyin.egbe\source\repos\AIScalingSolution\Infrastructure\AIScaling.PredictiveMiddleware\bin\Debug\net8.0\AIScaling.PredictiveMiddleware.xml
+c:\Users\Timeyin.egbe\source\repos\AIScalingSolution\Infrastructure\AIScaling.PredictiveMiddleware\obj\Debug\net8.0\AIScaling.PredictiveMiddleware.dll
+c:\Users\Timeyin.egbe\source\repos\AIScalingSolution\Infrastructure\AIScaling.PredictiveMiddleware\obj\Debug\net8.0\refint\AIScaling.PredictiveMiddleware.dll
+c:\Users\Timeyin.egbe\source\repos\AIScalingSolution\Infrastructure\AIScaling.PredictiveMiddleware\obj\Debug\net8.0\AIScaling.PredictiveMiddleware.xml
+c:\Users\Timeyin.egbe\source\repos\AIScalingSolution\Infrastructure\AIScaling.PredictiveMiddleware\obj\Debug\net8.0\AIScaling.PredictiveMiddleware.pdb
+c:\Users\Timeyin.egbe\source\repos\AIScalingSolution\Infrastructure\AIScaling.PredictiveMiddleware\obj\Debug\net8.0\ref\AIScaling.PredictiveMiddleware.dll

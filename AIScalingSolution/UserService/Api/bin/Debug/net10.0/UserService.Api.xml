@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>UserService.Api</name>
+    </assembly>
+    <members>
+        <member name="T:UserService.Api.Controllers.UsersController">
+            <summary>User CRUD API endpoints.</summary>
+        </member>
+        <member name="M:UserService.Api.Controllers.UsersController.GetAll(System.Threading.CancellationToken)">
+            <summary>Get all users.</summary>
+        </member>
+        <member name="M:UserService.Api.Controllers.UsersController.GetById(System.Int32,System.Threading.CancellationToken)">
+            <summary>Get user by id.</summary>
+        </member>
+        <member name="M:UserService.Api.Controllers.UsersController.Create(AIScaling.Shared.DTOs.CreateUserDto,System.Threading.CancellationToken)">
+            <summary>Create a new user.</summary>
+        </member>
+        <member name="M:UserService.Api.Controllers.UsersController.Update(System.Int32,AIScaling.Shared.DTOs.UpdateUserDto,System.Threading.CancellationToken)">
+            <summary>Update an existing user.</summary>
+        </member>
+        <member name="M:UserService.Api.Controllers.UsersController.Delete(System.Int32,System.Threading.CancellationToken)">
+            <summary>Delete a user.</summary>
+        </member>
+        <member name="T:Program">
+            <summary>
+            Auto-generated public partial Program class for top-level statement apps.
+            </summary>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "PredictionService.Api": {
+      "commandName": "Project",
+      "launchUrl": "swagger",
+      "applicationUrl": "http://localhost:5005"
+    }
+  }
+}

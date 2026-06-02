@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>UserService.Domain</name>
+    </assembly>
+    <members>
+        <member name="T:UserService.Domain.Entities.User">
+            <summary>User aggregate root.</summary>
+        </member>
+    </members>
+</doc>

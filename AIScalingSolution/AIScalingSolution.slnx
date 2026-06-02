@@ -1,0 +1,78 @@
+<Solution>
+  <Folder Name="/Infrastructure/">
+    <Project Path="Infrastructure/AIScaling.Infrastructure/AIScaling.Infrastructure.csproj" />
+    <Project Path="Infrastructure/AIScaling.PredictiveMiddleware/AIScaling.PredictiveMiddleware.csproj" />
+  </Folder>
+  <Folder Name="/StressTest/">
+    <Project Path="StressTest/Api/StressTest.Api.csproj" />
+  </Folder>
+  <Folder Name="/MonitoringService/" />
+  <Folder Name="/MonitoringService/Api/">
+    <Project Path="MonitoringService/Api/MonitoringService.Api.csproj" />
+  </Folder>
+  <Folder Name="/MonitoringService/Application/">
+    <Project Path="MonitoringService/Application/MonitoringService.Application.csproj" />
+  </Folder>
+  <Folder Name="/MonitoringService/Domain/">
+    <Project Path="MonitoringService/Domain/MonitoringService.Domain.csproj" />
+  </Folder>
+  <Folder Name="/MonitoringService/Infrastructure/">
+    <Project Path="MonitoringService/Infrastructure/MonitoringService.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/OrderService/" />
+  <Folder Name="/OrderService/Api/">
+    <Project Path="OrderService/Api/OrderService.Api.csproj" />
+  </Folder>
+  <Folder Name="/OrderService/Application/">
+    <Project Path="OrderService/Application/OrderService.Application.csproj" />
+  </Folder>
+  <Folder Name="/OrderService/Domain/">
+    <Project Path="OrderService/Domain/OrderService.Domain.csproj" />
+  </Folder>
+  <Folder Name="/OrderService/Infrastructure/">
+    <Project Path="OrderService/Infrastructure/OrderService.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/PredictionService/" />
+  <Folder Name="/PredictionService/Api/">
+    <Project Path="PredictionService/Api/PredictionService.Api.csproj" />
+  </Folder>
+  <Folder Name="/PredictionService/Application/">
+    <Project Path="PredictionService/Application/PredictionService.Application.csproj" />
+  </Folder>
+  <Folder Name="/PredictionService/Domain/">
+    <Project Path="PredictionService/Domain/PredictionService.Domain.csproj" />
+  </Folder>
+  <Folder Name="/PredictionService/Infrastructure/">
+    <Project Path="PredictionService/Infrastructure/PredictionService.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/ProductService/" />
+  <Folder Name="/ProductService/Api/">
+    <Project Path="ProductService/Api/ProductService.Api.csproj" />
+  </Folder>
+  <Folder Name="/ProductService/Application/">
+    <Project Path="ProductService/Application/ProductService.Application.csproj" />
+  </Folder>
+  <Folder Name="/ProductService/Domain/">
+    <Project Path="ProductService/Domain/ProductService.Domain.csproj" />
+  </Folder>
+  <Folder Name="/ProductService/Infrastructure/">
+    <Project Path="ProductService/Infrastructure/ProductService.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/Shared/">
+    <Project Path="Shared/AIScaling.Shared/AIScaling.Shared.csproj" />
+  </Folder>
+  <Folder Name="/UserService/" />
+  <Folder Name="/UserService/Api/">
+    <Project Path="UserService/Api/UserService.Api.csproj" />
+  </Folder>
+  <Folder Name="/UserService/Application/">
+    <Project Path="UserService/Application/UserService.Application.csproj" />
+  </Folder>
+  <Folder Name="/UserService/Domain/">
+    <Project Path="UserService/Domain/UserService.Domain.csproj" />
+  </Folder>
+  <Folder Name="/UserService/Infrastructure/">
+    <Project Path="UserService/Infrastructure/UserService.Infrastructure.csproj" />
+  </Folder>
+  <Project Path="ApiGateway/ApiGateway.csproj" />
+</Solution>

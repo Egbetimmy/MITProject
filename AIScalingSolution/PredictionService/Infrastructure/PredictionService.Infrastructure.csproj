@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="6.0.1" />
+    <PackageReference Include="Microsoft.ML" Version="4.0.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Application\PredictionService.Application.csproj" />
+    <ProjectReference Include="..\..\Shared\AIScaling.Shared\AIScaling.Shared.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\AIScaling.Infrastructure\AIScaling.Infrastructure.csproj" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,11 @@
+C:\Users\Timeyin.egbe\source\repos\AIScalingSolution\PredictionService\Domain\bin\Debug\net10.0\PredictionService.Domain.deps.json
+C:\Users\Timeyin.egbe\source\repos\AIScalingSolution\PredictionService\Domain\bin\Debug\net10.0\PredictionService.Domain.dll
+C:\Users\Timeyin.egbe\source\repos\AIScalingSolution\PredictionService\Domain\bin\Debug\net10.0\PredictionService.Domain.pdb
+C:\Users\Timeyin.egbe\source\repos\AIScalingSolution\PredictionService\Domain\obj\Debug\net10.0\PredictionService.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Timeyin.egbe\source\repos\AIScalingSolution\PredictionService\Domain\obj\Debug\net10.0\PredictionService.Domain.AssemblyInfoInputs.cache
+C:\Users\Timeyin.egbe\source\repos\AIScalingSolution\PredictionService\Domain\obj\Debug\net10.0\PredictionService.Domain.AssemblyInfo.cs
+C:\Users\Timeyin.egbe\source\repos\AIScalingSolution\PredictionService\Domain\obj\Debug\net10.0\PredictionService.Domain.csproj.CoreCompileInputs.cache
+C:\Users\Timeyin.egbe\source\repos\AIScalingSolution\PredictionService\Domain\obj\Debug\net10.0\PredictionService.Domain.dll
+C:\Users\Timeyin.egbe\source\repos\AIScalingSolution\PredictionService\Domain\obj\Debug\net10.0\refint\PredictionService.Domain.dll
+C:\Users\Timeyin.egbe\source\repos\AIScalingSolution\PredictionService\Domain\obj\Debug\net10.0\PredictionService.Domain.pdb
+C:\Users\Timeyin.egbe\source\repos\AIScalingSolution\PredictionService\Domain\obj\Debug\net10.0\ref\PredictionService.Domain.dll

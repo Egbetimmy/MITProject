@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "ProductService.Api": {
+      "commandName": "Project",
+      "launchUrl": "swagger",
+      "applicationUrl": "http://localhost:5002"
+    }
+  }
+}

@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>UserService.Infrastructure</name>
+    </assembly>
+    <members>
+        <member name="T:UserService.Infrastructure.DependencyInjection">
+            <summary>Infrastructure layer DI registration.</summary>
+        </member>
+        <member name="T:UserService.Infrastructure.Persistence.UserDbContext">
+            <summary>EF Core database context for users.</summary>
+        </member>
+        <member name="T:UserService.Infrastructure.Repositories.UserRepository">
+            <summary>EF Core user repository.</summary>
+        </member>
+        <member name="T:UserService.Infrastructure.Seed.UserDbSeed">
+            <summary>Sample user seed data.</summary>
+        </member>
+    </members>
+</doc>

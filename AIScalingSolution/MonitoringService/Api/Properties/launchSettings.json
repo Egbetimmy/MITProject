@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "MonitoringService.Api": {
+      "commandName": "Project",
+      "launchUrl": "swagger",
+      "applicationUrl": "http://localhost:5004"
+    }
+  }
+}

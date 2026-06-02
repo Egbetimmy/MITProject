@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "dgSpecHash": "/Jbk/azflGg=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Timeyin.egbe\\source\\repos\\AIScalingSolution\\Shared\\AIScaling.Shared\\AIScaling.Shared.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Timeyin.egbe\\.nuget\\packages\\microsoft.ml\\4.0.2\\microsoft.ml.4.0.2.nupkg.sha512",
+    "C:\\Users\\Timeyin.egbe\\.nuget\\packages\\microsoft.ml.cpumath\\4.0.2\\microsoft.ml.cpumath.4.0.2.nupkg.sha512",
+    "C:\\Users\\Timeyin.egbe\\.nuget\\packages\\microsoft.ml.dataview\\4.0.2\\microsoft.ml.dataview.4.0.2.nupkg.sha512",
+    "C:\\Users\\Timeyin.egbe\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512",
+    "C:\\Users\\Timeyin.egbe\\.nuget\\packages\\system.codedom\\8.0.0\\system.codedom.8.0.0.nupkg.sha512",
+    "C:\\Users\\Timeyin.egbe\\.nuget\\packages\\system.numerics.tensors\\8.0.0\\system.numerics.tensors.8.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}

@@ -1,0 +1,13 @@
+C:\Users\Timeyin.egbe\source\repos\AIScalingSolution\UserService\Domain\bin\Debug\net10.0\UserService.Domain.deps.json
+C:\Users\Timeyin.egbe\source\repos\AIScalingSolution\UserService\Domain\bin\Debug\net10.0\UserService.Domain.dll
+C:\Users\Timeyin.egbe\source\repos\AIScalingSolution\UserService\Domain\bin\Debug\net10.0\UserService.Domain.pdb
+C:\Users\Timeyin.egbe\source\repos\AIScalingSolution\UserService\Domain\bin\Debug\net10.0\UserService.Domain.xml
+C:\Users\Timeyin.egbe\source\repos\AIScalingSolution\UserService\Domain\obj\Debug\net10.0\UserService.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Timeyin.egbe\source\repos\AIScalingSolution\UserService\Domain\obj\Debug\net10.0\UserService.Domain.AssemblyInfoInputs.cache
+C:\Users\Timeyin.egbe\source\repos\AIScalingSolution\UserService\Domain\obj\Debug\net10.0\UserService.Domain.AssemblyInfo.cs
+C:\Users\Timeyin.egbe\source\repos\AIScalingSolution\UserService\Domain\obj\Debug\net10.0\UserService.Domain.csproj.CoreCompileInputs.cache
+C:\Users\Timeyin.egbe\source\repos\AIScalingSolution\UserService\Domain\obj\Debug\net10.0\UserService.Domain.dll
+C:\Users\Timeyin.egbe\source\repos\AIScalingSolution\UserService\Domain\obj\Debug\net10.0\refint\UserService.Domain.dll
+C:\Users\Timeyin.egbe\source\repos\AIScalingSolution\UserService\Domain\obj\Debug\net10.0\UserService.Domain.xml
+C:\Users\Timeyin.egbe\source\repos\AIScalingSolution\UserService\Domain\obj\Debug\net10.0\UserService.Domain.pdb
+C:\Users\Timeyin.egbe\source\repos\AIScalingSolution\UserService\Domain\obj\Debug\net10.0\ref\UserService.Domain.dll
