@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "cUsFi60Zfj8=",
+  "dgSpecHash": "6ryKDEmUtPw=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Timeyin.egbe\\source\\repos\\AIScalingSolution\\PredictionService\\Api\\PredictionService.Api.csproj",
+  "projectFilePath": "c:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\PredictionService\\Api\\PredictionService.Api.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Timeyin.egbe\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\Timeyin.egbe\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",
@@ -60,9 +60,9 @@
       "code": "NU1902",
       "level": "Warning",
       "message": "Package 'OpenTelemetry.Api' 1.12.0 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-g94r-2vxg-569j",
-      "projectPath": "C:\\Users\\Timeyin.egbe\\source\\repos\\AIScalingSolution\\PredictionService\\Api\\PredictionService.Api.csproj",
+      "projectPath": "c:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\PredictionService\\Api\\PredictionService.Api.csproj",
       "warningLevel": 1,
-      "filePath": "C:\\Users\\Timeyin.egbe\\source\\repos\\AIScalingSolution\\PredictionService\\Api\\PredictionService.Api.csproj",
+      "filePath": "c:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\PredictionService\\Api\\PredictionService.Api.csproj",
       "libraryId": "OpenTelemetry.Api",
       "targetGraphs": [
         "net10.0"
@@ -72,9 +72,9 @@
       "code": "NU1902",
       "level": "Warning",
       "message": "Package 'OpenTelemetry.Exporter.OpenTelemetryProtocol' 1.12.0 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-4625-4j76-fww9",
-      "projectPath": "C:\\Users\\Timeyin.egbe\\source\\repos\\AIScalingSolution\\PredictionService\\Api\\PredictionService.Api.csproj",
+      "projectPath": "c:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\PredictionService\\Api\\PredictionService.Api.csproj",
       "warningLevel": 1,
-      "filePath": "C:\\Users\\Timeyin.egbe\\source\\repos\\AIScalingSolution\\PredictionService\\Api\\PredictionService.Api.csproj",
+      "filePath": "c:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\PredictionService\\Api\\PredictionService.Api.csproj",
       "libraryId": "OpenTelemetry.Exporter.OpenTelemetryProtocol",
       "targetGraphs": [
         "net10.0"

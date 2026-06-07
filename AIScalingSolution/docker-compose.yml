@@ -87,6 +87,18 @@ services:
     volumes:
       - ml-models:/app
 
+  redis:
+    image: redis:7-alpine
+    container_name: aiscaling-redis
+    command: ["redis-server", "--appendonly", "no", "--save", ""]
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
   apigateway:
     build:
       context: .
@@ -95,11 +107,24 @@ services:
     ports:
       - "5000:8080"
     depends_on:
-      - userservice
-      - productservice
-      - orderservice
+      redis:
+        condition: service_healthy
+      userservice:
+        condition: service_started
+      productservice:
+        condition: service_started
+      orderservice:
+        condition: service_started
+      monitoringservice:
+        condition: service_started
+      predictionservice:
+        condition: service_started
     environment:
       ASPNETCORE_ENVIRONMENT: Production
+      PredictiveMiddleware__Redis__ConnectionString: redis:6379
+      PredictiveMiddleware__Diagnostics__IntervalSeconds: 2
+      GatewayIntelligence__MonitoringBaseUrl: http://monitoringservice:8080
+      GatewayIntelligence__PredictionBaseUrl: http://predictionservice:8080
 
 volumes:
   sqlserver-data:

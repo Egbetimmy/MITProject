@@ -1,5 +1,6 @@
 using AIScaling.Infrastructure.Extensions;
 using AIScaling.Infrastructure.Logging;
+using PredictionService.Application.Interfaces;
 using PredictionService.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,4 +17,15 @@ app.UseSwaggerUI();
 app.UseCommonInfrastructure();
 app.MapControllers();
 app.MapGet("/health", () => Results.Ok("PredictionService is healthy"));
+app.MapGet("/health/model", (IPredictionAppService predictionService) =>
+{
+    if (predictionService.IsModelReady)
+    {
+        return Results.Ok(new { status = "ready", modelLoaded = true });
+    }
+
+    return Results.Json(
+        new { status = "not_ready", modelLoaded = false, message = "Train the model via POST /api/predictions/train" },
+        statusCode: StatusCodes.Status503ServiceUnavailable);
+});
 app.Run();

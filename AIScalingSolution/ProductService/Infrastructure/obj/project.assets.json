@@ -4713,11 +4713,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Timeyin.egbe\\source\\repos\\AIScalingSolution\\ProductService\\Infrastructure\\ProductService.Infrastructure.csproj",
+      "projectUniqueName": "c:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\ProductService\\Infrastructure\\ProductService.Infrastructure.csproj",
       "projectName": "ProductService.Infrastructure",
-      "projectPath": "C:\\Users\\Timeyin.egbe\\source\\repos\\AIScalingSolution\\ProductService\\Infrastructure\\ProductService.Infrastructure.csproj",
+      "projectPath": "c:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\ProductService\\Infrastructure\\ProductService.Infrastructure.csproj",
       "packagesPath": "C:\\Users\\Timeyin.egbe\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Timeyin.egbe\\source\\repos\\AIScalingSolution\\ProductService\\Infrastructure\\obj\\",
+      "outputPath": "c:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\ProductService\\Infrastructure\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -4739,14 +4739,14 @@
         "net10.0": {
           "targetAlias": "net10.0",
           "projectReferences": {
-            "C:\\Users\\Timeyin.egbe\\source\\repos\\AIScalingSolution\\ProductService\\Application\\ProductService.Application.csproj": {
-              "projectPath": "C:\\Users\\Timeyin.egbe\\source\\repos\\AIScalingSolution\\ProductService\\Application\\ProductService.Application.csproj"
+            "c:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\ProductService\\Application\\ProductService.Application.csproj": {
+              "projectPath": "c:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\ProductService\\Application\\ProductService.Application.csproj"
             },
-            "C:\\Users\\Timeyin.egbe\\source\\repos\\AIScalingSolution\\ProductService\\Domain\\ProductService.Domain.csproj": {
-              "projectPath": "C:\\Users\\Timeyin.egbe\\source\\repos\\AIScalingSolution\\ProductService\\Domain\\ProductService.Domain.csproj"
+            "c:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\ProductService\\Domain\\ProductService.Domain.csproj": {
+              "projectPath": "c:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\ProductService\\Domain\\ProductService.Domain.csproj"
             },
-            "C:\\Users\\Timeyin.egbe\\source\\repos\\AIScalingSolution\\Shared\\AIScaling.Shared\\AIScaling.Shared.csproj": {
-              "projectPath": "C:\\Users\\Timeyin.egbe\\source\\repos\\AIScalingSolution\\Shared\\AIScaling.Shared\\AIScaling.Shared.csproj"
+            "c:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\Shared\\AIScaling.Shared\\AIScaling.Shared.csproj": {
+              "projectPath": "c:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\Shared\\AIScaling.Shared\\AIScaling.Shared.csproj"
             }
           }
         }

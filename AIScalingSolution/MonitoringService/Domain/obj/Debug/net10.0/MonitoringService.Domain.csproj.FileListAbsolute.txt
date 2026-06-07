@@ -9,3 +9,15 @@ C:\Users\Timeyin.egbe\source\repos\AIScalingSolution\MonitoringService\Domain\ob
 C:\Users\Timeyin.egbe\source\repos\AIScalingSolution\MonitoringService\Domain\obj\Debug\net10.0\refint\MonitoringService.Domain.dll
 C:\Users\Timeyin.egbe\source\repos\AIScalingSolution\MonitoringService\Domain\obj\Debug\net10.0\MonitoringService.Domain.pdb
 C:\Users\Timeyin.egbe\source\repos\AIScalingSolution\MonitoringService\Domain\obj\Debug\net10.0\ref\MonitoringService.Domain.dll
+c:\Users\Timeyin.egbe\Documents\GitHub\MITProject\AIScalingSolution\MonitoringService\Domain\bin\Debug\net10.0\MonitoringService.Domain.deps.json
+c:\Users\Timeyin.egbe\Documents\GitHub\MITProject\AIScalingSolution\MonitoringService\Domain\bin\Debug\net10.0\MonitoringService.Domain.dll
+c:\Users\Timeyin.egbe\Documents\GitHub\MITProject\AIScalingSolution\MonitoringService\Domain\bin\Debug\net10.0\MonitoringService.Domain.pdb
+c:\Users\Timeyin.egbe\Documents\GitHub\MITProject\AIScalingSolution\MonitoringService\Domain\obj\Debug\net10.0\MonitoringService.Domain.GeneratedMSBuildEditorConfig.editorconfig
+c:\Users\Timeyin.egbe\Documents\GitHub\MITProject\AIScalingSolution\MonitoringService\Domain\obj\Debug\net10.0\MonitoringService.Domain.AssemblyInfoInputs.cache
+c:\Users\Timeyin.egbe\Documents\GitHub\MITProject\AIScalingSolution\MonitoringService\Domain\obj\Debug\net10.0\MonitoringService.Domain.AssemblyInfo.cs
+c:\Users\Timeyin.egbe\Documents\GitHub\MITProject\AIScalingSolution\MonitoringService\Domain\obj\Debug\net10.0\MonitoringService.Domain.csproj.CoreCompileInputs.cache
+c:\Users\Timeyin.egbe\Documents\GitHub\MITProject\AIScalingSolution\MonitoringService\Domain\obj\Debug\net10.0\MonitoringService.Domain.sourcelink.json
+c:\Users\Timeyin.egbe\Documents\GitHub\MITProject\AIScalingSolution\MonitoringService\Domain\obj\Debug\net10.0\MonitoringService.Domain.dll
+c:\Users\Timeyin.egbe\Documents\GitHub\MITProject\AIScalingSolution\MonitoringService\Domain\obj\Debug\net10.0\refint\MonitoringService.Domain.dll
+c:\Users\Timeyin.egbe\Documents\GitHub\MITProject\AIScalingSolution\MonitoringService\Domain\obj\Debug\net10.0\MonitoringService.Domain.pdb
+c:\Users\Timeyin.egbe\Documents\GitHub\MITProject\AIScalingSolution\MonitoringService\Domain\obj\Debug\net10.0\ref\MonitoringService.Domain.dll

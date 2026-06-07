@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "d9cTwMcmwGg=",
+  "dgSpecHash": "/fK6b6BfZYk=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Timeyin.egbe\\source\\repos\\AIScalingSolution\\Infrastructure\\AIScaling.PredictiveMiddleware\\AIScaling.PredictiveMiddleware.csproj",
+  "projectFilePath": "c:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\Infrastructure\\AIScaling.PredictiveMiddleware\\AIScaling.PredictiveMiddleware.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Timeyin.egbe\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\9.0.0\\microsoft.extensions.configuration.abstractions.9.0.0.nupkg.sha512",
     "C:\\Users\\Timeyin.egbe\\.nuget\\packages\\microsoft.extensions.configuration.binder\\9.0.0\\microsoft.extensions.configuration.binder.9.0.0.nupkg.sha512",
@@ -24,10 +24,15 @@
     "C:\\Users\\Timeyin.egbe\\.nuget\\packages\\pipelines.sockets.unofficial\\2.2.8\\pipelines.sockets.unofficial.2.2.8.nupkg.sha512",
     "C:\\Users\\Timeyin.egbe\\.nuget\\packages\\stackexchange.redis\\2.8.58\\stackexchange.redis.2.8.58.nupkg.sha512",
     "C:\\Users\\Timeyin.egbe\\.nuget\\packages\\system.codedom\\8.0.0\\system.codedom.8.0.0.nupkg.sha512",
+    "C:\\Users\\Timeyin.egbe\\.nuget\\packages\\system.collections.immutable\\8.0.0\\system.collections.immutable.8.0.0.nupkg.sha512",
     "C:\\Users\\Timeyin.egbe\\.nuget\\packages\\system.diagnostics.diagnosticsource\\9.0.0\\system.diagnostics.diagnosticsource.9.0.0.nupkg.sha512",
+    "C:\\Users\\Timeyin.egbe\\.nuget\\packages\\system.io.pipelines\\5.0.1\\system.io.pipelines.5.0.1.nupkg.sha512",
+    "C:\\Users\\Timeyin.egbe\\.nuget\\packages\\system.memory\\4.6.0\\system.memory.4.6.0.nupkg.sha512",
     "C:\\Users\\Timeyin.egbe\\.nuget\\packages\\system.numerics.tensors\\8.0.0\\system.numerics.tensors.8.0.0.nupkg.sha512",
-    "C:\\Users\\Timeyin.egbe\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\8.0.24\\microsoft.windowsdesktop.app.ref.8.0.24.nupkg.sha512",
+    "C:\\Users\\Timeyin.egbe\\.nuget\\packages\\system.reflection.emit.lightweight\\4.7.0\\system.reflection.emit.lightweight.4.7.0.nupkg.sha512",
+    "C:\\Users\\Timeyin.egbe\\.nuget\\packages\\system.threading.channels\\8.0.0\\system.threading.channels.8.0.0.nupkg.sha512",
     "C:\\Users\\Timeyin.egbe\\.nuget\\packages\\microsoft.netcore.app.ref\\8.0.24\\microsoft.netcore.app.ref.8.0.24.nupkg.sha512",
+    "C:\\Users\\Timeyin.egbe\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\8.0.24\\microsoft.windowsdesktop.app.ref.8.0.24.nupkg.sha512",
     "C:\\Users\\Timeyin.egbe\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\8.0.24\\microsoft.aspnetcore.app.ref.8.0.24.nupkg.sha512"
   ],
   "logs": []

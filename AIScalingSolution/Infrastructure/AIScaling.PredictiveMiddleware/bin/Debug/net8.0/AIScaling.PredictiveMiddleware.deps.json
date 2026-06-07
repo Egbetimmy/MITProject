@@ -363,6 +363,7 @@
       },
       "StackExchange.Redis/2.8.58": {
         "dependencies": {
+          "Microsoft.Extensions.Logging.Abstractions": "9.0.0",
           "Pipelines.Sockets.Unofficial": "2.2.8"
         },
         "runtime": {

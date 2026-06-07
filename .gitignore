@@ -1,48 +1,135 @@
-# Prerequisites
-*.d
+# Build outputs
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]uild/
+msbuild.log
+msbuild.err
+msbuild.wip
 
-# Object files
+# Visual Studio / Rider / VS Code
+.vs/
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.userprefs
+.idea/
+*.sln.iml
+*.DotSettings.user
+
+# NuGet
+*.nupkg
+*.snupkg
+**/[Pp]ackages/*
+!**/[Pp]ackages/build/
+project.lock.json
+project.fragment.lock.json
+artifacts/
+.nuget/
+
+# .NET tooling
+.dotnet/
+tools/
+*.pfx
+*.publishsettings
+orleans.codegen.cs
+ScaffoldingReadMe.txt
+
+# Test / coverage
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+*.trx
+*.coverage
+*.coveragexml
+coverage*.json
+coverage*.xml
+TestResults/
+*.VisualState.xml
+
+# Load test artifacts
+results.jtl
+ReportOutput/
+load-tests/results/
+*.jtl
+evaluations/
+
+# ML models (generated at runtime)
+model.zip
+**/model.zip
+
+# OS files
+.DS_Store
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.swp
+*~
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+appsettings.*.local.json
+secrets.json
+*.pem
+*.key
+
+# Docker (local overrides only)
+docker-compose.override.yml
+
+# Logs and databases
+*.log
+*.sqlite
+*.db
+*.mdf
+*.ldf
+
+# Node (if used for tooling)
+node_modules/
+
+# Legacy C/C++ artifacts (from initial template)
+*.d
 *.o
 *.ko
 *.obj
 *.elf
-
-# Linker output
 *.ilk
 *.map
 *.exp
-
-# Precompiled Headers
 *.gch
 *.pch
-
-# Libraries
 *.lib
 *.a
 *.la
 *.lo
-
-# Shared objects (inc. Windows DLLs)
-*.dll
 *.so
 *.so.*
 *.dylib
-
-# Executables
 *.exe
 *.out
 *.app
 *.i*86
 *.x86_64
 *.hex
-
-# Debug files
 *.dSYM/
 *.su
 *.idb
 *.pdb
-
-# Kernel Module Compile Results
 *.mod*
 *.cmd
 .tmp_versions/
@@ -50,6 +137,4 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
-
-# debug information files
 *.dwo

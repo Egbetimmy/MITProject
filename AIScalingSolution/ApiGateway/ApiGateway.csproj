@@ -5,10 +5,13 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Http.Resilience" Version="10.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="7.2.0" />
     <PackageReference Include="Yarp.ReverseProxy" Version="2.3.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Infrastructure\AIScaling.Infrastructure\AIScaling.Infrastructure.csproj" />
+    <ProjectReference Include="..\Infrastructure\AIScaling.PredictiveMiddleware\AIScaling.PredictiveMiddleware.csproj" />
+    <ProjectReference Include="..\Shared\AIScaling.Shared\AIScaling.Shared.csproj" />
   </ItemGroup>
 </Project>

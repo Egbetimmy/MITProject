@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "u9El5uo118Y=",
+  "dgSpecHash": "o1sq348TuGc=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Timeyin.egbe\\source\\repos\\AIScalingSolution\\PredictionService\\Application\\PredictionService.Application.csproj",
+  "projectFilePath": "c:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\PredictionService\\Application\\PredictionService.Application.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Timeyin.egbe\\.nuget\\packages\\microsoft.ml\\4.0.2\\microsoft.ml.4.0.2.nupkg.sha512",
     "C:\\Users\\Timeyin.egbe\\.nuget\\packages\\microsoft.ml.cpumath\\4.0.2\\microsoft.ml.cpumath.4.0.2.nupkg.sha512",

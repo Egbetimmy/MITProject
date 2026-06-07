@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "8A+K0V/8x8g=",
+  "dgSpecHash": "UOFnkC52O3U=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Timeyin.egbe\\source\\repos\\AIScalingSolution\\MonitoringService\\Infrastructure\\MonitoringService.Infrastructure.csproj",
+  "projectFilePath": "c:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\MonitoringService\\Infrastructure\\MonitoringService.Infrastructure.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Timeyin.egbe\\.nuget\\packages\\azure.core\\1.47.1\\azure.core.1.47.1.nupkg.sha512",
     "C:\\Users\\Timeyin.egbe\\.nuget\\packages\\azure.identity\\1.14.2\\azure.identity.1.14.2.nupkg.sha512",

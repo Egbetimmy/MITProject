@@ -9,3 +9,15 @@ C:\Users\Timeyin.egbe\source\repos\AIScalingSolution\PredictionService\Domain\ob
 C:\Users\Timeyin.egbe\source\repos\AIScalingSolution\PredictionService\Domain\obj\Debug\net10.0\refint\PredictionService.Domain.dll
 C:\Users\Timeyin.egbe\source\repos\AIScalingSolution\PredictionService\Domain\obj\Debug\net10.0\PredictionService.Domain.pdb
 C:\Users\Timeyin.egbe\source\repos\AIScalingSolution\PredictionService\Domain\obj\Debug\net10.0\ref\PredictionService.Domain.dll
+c:\Users\Timeyin.egbe\Documents\GitHub\MITProject\AIScalingSolution\PredictionService\Domain\bin\Debug\net10.0\PredictionService.Domain.deps.json
+c:\Users\Timeyin.egbe\Documents\GitHub\MITProject\AIScalingSolution\PredictionService\Domain\bin\Debug\net10.0\PredictionService.Domain.dll
+c:\Users\Timeyin.egbe\Documents\GitHub\MITProject\AIScalingSolution\PredictionService\Domain\bin\Debug\net10.0\PredictionService.Domain.pdb
+c:\Users\Timeyin.egbe\Documents\GitHub\MITProject\AIScalingSolution\PredictionService\Domain\obj\Debug\net10.0\PredictionService.Domain.GeneratedMSBuildEditorConfig.editorconfig
+c:\Users\Timeyin.egbe\Documents\GitHub\MITProject\AIScalingSolution\PredictionService\Domain\obj\Debug\net10.0\PredictionService.Domain.AssemblyInfoInputs.cache
+c:\Users\Timeyin.egbe\Documents\GitHub\MITProject\AIScalingSolution\PredictionService\Domain\obj\Debug\net10.0\PredictionService.Domain.AssemblyInfo.cs
+c:\Users\Timeyin.egbe\Documents\GitHub\MITProject\AIScalingSolution\PredictionService\Domain\obj\Debug\net10.0\PredictionService.Domain.csproj.CoreCompileInputs.cache
+c:\Users\Timeyin.egbe\Documents\GitHub\MITProject\AIScalingSolution\PredictionService\Domain\obj\Debug\net10.0\PredictionService.Domain.sourcelink.json
+c:\Users\Timeyin.egbe\Documents\GitHub\MITProject\AIScalingSolution\PredictionService\Domain\obj\Debug\net10.0\PredictionService.Domain.dll
+c:\Users\Timeyin.egbe\Documents\GitHub\MITProject\AIScalingSolution\PredictionService\Domain\obj\Debug\net10.0\refint\PredictionService.Domain.dll
+c:\Users\Timeyin.egbe\Documents\GitHub\MITProject\AIScalingSolution\PredictionService\Domain\obj\Debug\net10.0\PredictionService.Domain.pdb
+c:\Users\Timeyin.egbe\Documents\GitHub\MITProject\AIScalingSolution\PredictionService\Domain\obj\Debug\net10.0\ref\PredictionService.Domain.dll

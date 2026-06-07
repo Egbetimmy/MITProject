@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "xdOMTOqXJLI=",
+  "dgSpecHash": "/viAnfga/jY=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Timeyin.egbe\\source\\repos\\AIScalingSolution\\ProductService\\Api\\ProductService.Api.csproj",
+  "projectFilePath": "c:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\ProductService\\Api\\ProductService.Api.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Timeyin.egbe\\.nuget\\packages\\azure.core\\1.47.1\\azure.core.1.47.1.nupkg.sha512",
     "C:\\Users\\Timeyin.egbe\\.nuget\\packages\\azure.identity\\1.14.2\\azure.identity.1.14.2.nupkg.sha512",
@@ -90,9 +90,9 @@
       "code": "NU1902",
       "level": "Warning",
       "message": "Package 'OpenTelemetry.Api' 1.12.0 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-g94r-2vxg-569j",
-      "projectPath": "C:\\Users\\Timeyin.egbe\\source\\repos\\AIScalingSolution\\ProductService\\Api\\ProductService.Api.csproj",
+      "projectPath": "c:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\ProductService\\Api\\ProductService.Api.csproj",
       "warningLevel": 1,
-      "filePath": "C:\\Users\\Timeyin.egbe\\source\\repos\\AIScalingSolution\\ProductService\\Api\\ProductService.Api.csproj",
+      "filePath": "c:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\ProductService\\Api\\ProductService.Api.csproj",
       "libraryId": "OpenTelemetry.Api",
       "targetGraphs": [
         "net10.0"
@@ -102,9 +102,9 @@
       "code": "NU1902",
       "level": "Warning",
       "message": "Package 'OpenTelemetry.Exporter.OpenTelemetryProtocol' 1.12.0 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-4625-4j76-fww9",
-      "projectPath": "C:\\Users\\Timeyin.egbe\\source\\repos\\AIScalingSolution\\ProductService\\Api\\ProductService.Api.csproj",
+      "projectPath": "c:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\ProductService\\Api\\ProductService.Api.csproj",
       "warningLevel": 1,
-      "filePath": "C:\\Users\\Timeyin.egbe\\source\\repos\\AIScalingSolution\\ProductService\\Api\\ProductService.Api.csproj",
+      "filePath": "c:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\ProductService\\Api\\ProductService.Api.csproj",
       "libraryId": "OpenTelemetry.Exporter.OpenTelemetryProtocol",
       "targetGraphs": [
         "net10.0"

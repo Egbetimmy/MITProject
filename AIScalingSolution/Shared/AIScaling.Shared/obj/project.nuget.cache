@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "/Jbk/azflGg=",
+  "dgSpecHash": "amsiOx5SXgQ=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Timeyin.egbe\\source\\repos\\AIScalingSolution\\Shared\\AIScaling.Shared\\AIScaling.Shared.csproj",
+  "projectFilePath": "c:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\Shared\\AIScaling.Shared\\AIScaling.Shared.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Timeyin.egbe\\.nuget\\packages\\microsoft.ml\\4.0.2\\microsoft.ml.4.0.2.nupkg.sha512",
     "C:\\Users\\Timeyin.egbe\\.nuget\\packages\\microsoft.ml.cpumath\\4.0.2\\microsoft.ml.cpumath.4.0.2.nupkg.sha512",

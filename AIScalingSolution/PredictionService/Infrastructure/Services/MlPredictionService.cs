@@ -20,6 +20,16 @@ public sealed class MlPredictionService : IPredictionAppService
     private PredictionEngine<MetricData, PredictionResult>? _predictionEngine;
     private readonly object _lock = new();
 
+    public bool IsModelReady
+    {
+        get
+        {
+            if (_predictionEngine is not null) return true;
+            TryLoadModel();
+            return _predictionEngine is not null;
+        }
+    }
+
     public MlPredictionService(
         IMetricsDataLoader dataLoader,
         IScalingLogger scalingLogger,

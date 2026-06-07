@@ -11,3 +11,17 @@ C:\Users\Timeyin.egbe\source\repos\AIScalingSolution\UserService\Domain\obj\Debu
 C:\Users\Timeyin.egbe\source\repos\AIScalingSolution\UserService\Domain\obj\Debug\net10.0\UserService.Domain.xml
 C:\Users\Timeyin.egbe\source\repos\AIScalingSolution\UserService\Domain\obj\Debug\net10.0\UserService.Domain.pdb
 C:\Users\Timeyin.egbe\source\repos\AIScalingSolution\UserService\Domain\obj\Debug\net10.0\ref\UserService.Domain.dll
+c:\Users\Timeyin.egbe\Documents\GitHub\MITProject\AIScalingSolution\UserService\Domain\bin\Debug\net10.0\UserService.Domain.deps.json
+c:\Users\Timeyin.egbe\Documents\GitHub\MITProject\AIScalingSolution\UserService\Domain\bin\Debug\net10.0\UserService.Domain.dll
+c:\Users\Timeyin.egbe\Documents\GitHub\MITProject\AIScalingSolution\UserService\Domain\bin\Debug\net10.0\UserService.Domain.pdb
+c:\Users\Timeyin.egbe\Documents\GitHub\MITProject\AIScalingSolution\UserService\Domain\bin\Debug\net10.0\UserService.Domain.xml
+c:\Users\Timeyin.egbe\Documents\GitHub\MITProject\AIScalingSolution\UserService\Domain\obj\Debug\net10.0\UserService.Domain.GeneratedMSBuildEditorConfig.editorconfig
+c:\Users\Timeyin.egbe\Documents\GitHub\MITProject\AIScalingSolution\UserService\Domain\obj\Debug\net10.0\UserService.Domain.AssemblyInfoInputs.cache
+c:\Users\Timeyin.egbe\Documents\GitHub\MITProject\AIScalingSolution\UserService\Domain\obj\Debug\net10.0\UserService.Domain.AssemblyInfo.cs
+c:\Users\Timeyin.egbe\Documents\GitHub\MITProject\AIScalingSolution\UserService\Domain\obj\Debug\net10.0\UserService.Domain.csproj.CoreCompileInputs.cache
+c:\Users\Timeyin.egbe\Documents\GitHub\MITProject\AIScalingSolution\UserService\Domain\obj\Debug\net10.0\UserService.Domain.sourcelink.json
+c:\Users\Timeyin.egbe\Documents\GitHub\MITProject\AIScalingSolution\UserService\Domain\obj\Debug\net10.0\UserService.Domain.dll
+c:\Users\Timeyin.egbe\Documents\GitHub\MITProject\AIScalingSolution\UserService\Domain\obj\Debug\net10.0\refint\UserService.Domain.dll
+c:\Users\Timeyin.egbe\Documents\GitHub\MITProject\AIScalingSolution\UserService\Domain\obj\Debug\net10.0\UserService.Domain.xml
+c:\Users\Timeyin.egbe\Documents\GitHub\MITProject\AIScalingSolution\UserService\Domain\obj\Debug\net10.0\UserService.Domain.pdb
+c:\Users\Timeyin.egbe\Documents\GitHub\MITProject\AIScalingSolution\UserService\Domain\obj\Debug\net10.0\ref\UserService.Domain.dll
