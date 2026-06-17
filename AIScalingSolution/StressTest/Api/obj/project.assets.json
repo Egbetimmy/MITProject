@@ -1973,11 +1973,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "c:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\StressTest\\Api\\StressTest.Api.csproj",
+      "projectUniqueName": "C:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\StressTest\\Api\\StressTest.Api.csproj",
       "projectName": "StressTest.Api",
-      "projectPath": "c:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\StressTest\\Api\\StressTest.Api.csproj",
+      "projectPath": "C:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\StressTest\\Api\\StressTest.Api.csproj",
       "packagesPath": "C:\\Users\\Timeyin.egbe\\.nuget\\packages\\",
-      "outputPath": "c:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\StressTest\\Api\\obj\\",
+      "outputPath": "C:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\StressTest\\Api\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -1999,8 +1999,8 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "c:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\Infrastructure\\AIScaling.PredictiveMiddleware\\AIScaling.PredictiveMiddleware.csproj": {
-              "projectPath": "c:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\Infrastructure\\AIScaling.PredictiveMiddleware\\AIScaling.PredictiveMiddleware.csproj"
+            "C:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\Infrastructure\\AIScaling.PredictiveMiddleware\\AIScaling.PredictiveMiddleware.csproj": {
+              "projectPath": "C:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\Infrastructure\\AIScaling.PredictiveMiddleware\\AIScaling.PredictiveMiddleware.csproj"
             }
           }
         }

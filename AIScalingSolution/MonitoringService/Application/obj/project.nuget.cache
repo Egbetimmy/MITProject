@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "Q8FdaTc2ukE=",
+  "dgSpecHash": "I12WAvhmjyM=",
   "success": true,
-  "projectFilePath": "c:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\MonitoringService\\Application\\MonitoringService.Application.csproj",
+  "projectFilePath": "C:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\MonitoringService\\Application\\MonitoringService.Application.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Timeyin.egbe\\.nuget\\packages\\microsoft.ml\\4.0.2\\microsoft.ml.4.0.2.nupkg.sha512",
     "C:\\Users\\Timeyin.egbe\\.nuget\\packages\\microsoft.ml.cpumath\\4.0.2\\microsoft.ml.cpumath.4.0.2.nupkg.sha512",

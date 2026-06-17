@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("AIScaling.PredictiveMiddleware")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f3bbe42203e7ec62d37ce130a6c5fe6cb2e9bd78")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+12148fcd6e3c27b29e5515a29ea4570054a193bf")]
 [assembly: System.Reflection.AssemblyProductAttribute("AIScaling.PredictiveMiddleware")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AIScaling.PredictiveMiddleware")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

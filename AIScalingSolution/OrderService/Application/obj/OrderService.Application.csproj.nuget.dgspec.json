@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "c:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\OrderService\\Application\\OrderService.Application.csproj": {}
+    "C:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\OrderService\\Application\\OrderService.Application.csproj": {}
   },
   "projects": {
-    "c:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\OrderService\\Application\\OrderService.Application.csproj": {
+    "C:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\OrderService\\Application\\OrderService.Application.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\OrderService\\Application\\OrderService.Application.csproj",
+        "projectUniqueName": "C:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\OrderService\\Application\\OrderService.Application.csproj",
         "projectName": "OrderService.Application",
-        "projectPath": "c:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\OrderService\\Application\\OrderService.Application.csproj",
+        "projectPath": "C:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\OrderService\\Application\\OrderService.Application.csproj",
         "packagesPath": "C:\\Users\\Timeyin.egbe\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\OrderService\\Application\\obj\\",
+        "outputPath": "C:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\OrderService\\Application\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -33,11 +33,11 @@
           "net10.0": {
             "targetAlias": "net10.0",
             "projectReferences": {
-              "c:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\OrderService\\Domain\\OrderService.Domain.csproj": {
-                "projectPath": "c:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\OrderService\\Domain\\OrderService.Domain.csproj"
+              "C:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\OrderService\\Domain\\OrderService.Domain.csproj": {
+                "projectPath": "C:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\OrderService\\Domain\\OrderService.Domain.csproj"
               },
-              "c:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\Shared\\AIScaling.Shared\\AIScaling.Shared.csproj": {
-                "projectPath": "c:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\Shared\\AIScaling.Shared\\AIScaling.Shared.csproj"
+              "C:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\Shared\\AIScaling.Shared\\AIScaling.Shared.csproj": {
+                "projectPath": "C:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\Shared\\AIScaling.Shared\\AIScaling.Shared.csproj"
               }
             }
           }
@@ -351,14 +351,14 @@
         }
       }
     },
-    "c:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\OrderService\\Domain\\OrderService.Domain.csproj": {
+    "C:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\OrderService\\Domain\\OrderService.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\OrderService\\Domain\\OrderService.Domain.csproj",
+        "projectUniqueName": "C:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\OrderService\\Domain\\OrderService.Domain.csproj",
         "projectName": "OrderService.Domain",
-        "projectPath": "c:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\OrderService\\Domain\\OrderService.Domain.csproj",
+        "projectPath": "C:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\OrderService\\Domain\\OrderService.Domain.csproj",
         "packagesPath": "C:\\Users\\Timeyin.egbe\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\OrderService\\Domain\\obj\\",
+        "outputPath": "C:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\OrderService\\Domain\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -691,14 +691,14 @@
         }
       }
     },
-    "c:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\Shared\\AIScaling.Shared\\AIScaling.Shared.csproj": {
+    "C:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\Shared\\AIScaling.Shared\\AIScaling.Shared.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\Shared\\AIScaling.Shared\\AIScaling.Shared.csproj",
+        "projectUniqueName": "C:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\Shared\\AIScaling.Shared\\AIScaling.Shared.csproj",
         "projectName": "AIScaling.Shared",
-        "projectPath": "c:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\Shared\\AIScaling.Shared\\AIScaling.Shared.csproj",
+        "projectPath": "C:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\Shared\\AIScaling.Shared\\AIScaling.Shared.csproj",
         "packagesPath": "C:\\Users\\Timeyin.egbe\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\Shared\\AIScaling.Shared\\obj\\",
+        "outputPath": "C:\\Users\\Timeyin.egbe\\Documents\\GitHub\\MITProject\\AIScalingSolution\\Shared\\AIScaling.Shared\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
