@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MIT AI-Scaling Control Panel</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <!-- Chart.js CDN for stunning live analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="glow-container">
+        <div class="glow-orb orb-1"></div>
+        <div class="glow-orb orb-2"></div>
+    </div>
+
+    <div class="app-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo-area">
+                <div class="logo-icon"></div>
+                <span class="logo-text">ANTIGRAVITY <span class="logo-sub">SCALING</span></span>
+            </div>
+            
+            <div class="connection-status" id="connectionBadge">
+                <span class="pulse-dot"></span>
+                <span id="detectedMode">Detecting Stack...</span>
+            </div>
+
+            <nav class="nav-menu">
+                <button class="nav-item active" data-tab="dashboard">
+                    <span class="nav-icon">📊</span> Dashboard & Simulator
+                </button>
+                <button class="nav-item" data-tab="explorer" id="navExplorer">
+                    <span class="nav-icon">⚡</span> Service Test Bench
+                </button>
+                <button class="nav-item" data-tab="metrics">
+                    <span class="nav-icon">📈</span> Historical Telemetry
+                </button>
+                <button class="nav-item" data-tab="ml-model" id="navMlModel">
+                    <span class="nav-icon">🤖</span> AI Model Trainer
+                </button>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <p>MIT Scaling Project</p>
+                <p class="v-text">v1.1 (Adaptive Pipeline)</p>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="app-header">
+                <div class="header-title">
+                    <h1 id="pageTitle">System Telemetry Control Room</h1>
+                    <p class="subtitle">Observe real-time adaptive mitigation and proactive load shedding</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-secondary" id="refreshBtn">🔄 Refresh State</button>
+                </div>
+            </header>
+
+            <!-- Dashboard Tab -->
+            <section class="tab-content active" id="tab-dashboard">
+                <!-- Posture and Telemetry Grid -->
+                <div class="dashboard-grid">
+                    <!-- Posture Card -->
+                    <div class="card posture-card" id="postureCard">
+                        <div class="card-header">
+                            <h3>PROTECTIVE POSTURE</h3>
+                            <span class="info-icon" title="Determines active rate limits and load shedding policies">ℹ️</span>
+                        </div>
+                        <div class="posture-display">
+                            <div class="posture-badge" id="postureBadge">NOMINAL</div>
+                            <p class="posture-desc" id="postureDesc">System is running within normal thresholds. Non-critical routes are fully available.</p>
+                        </div>
+                        <div class="posture-meta">
+                            <span>Last changed: <strong id="postureChanged">0s ago</strong></span>
+                        </div>
+                    </div>
+
+                    <!-- Telemetry Stats -->
+                    <div class="card telemetry-card">
+                        <div class="card-header">
+                            <h3>REAL-TIME METRICS</h3>
+                        </div>
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <span class="stat-label">Current Load</span>
+                                <span class="stat-value" id="statRps">0.0 <span class="unit">RPS</span></span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">60s Forecast</span>
+                                <span class="stat-value" id="statForecast">0.0 <span class="unit">RPS</span></span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Throttled (429)</span>
+                                <span class="stat-value alert-text" id="statThrottled">0</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">P99 Overhead</span>
+                                <span class="stat-value" id="statOverhead">0.00 <span class="unit">ms</span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="card chart-card">
+                    <div class="card-header">
+                        <h3>Traffic Load vs. AI Model Prediction (Live)</h3>
+                        <div class="chart-legend">
+                            <span class="legend-item"><span class="legend-color rps"></span> Current RPS</span>
+                            <span class="legend-item"><span class="legend-color forecast"></span> Forecasted RPS</span>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="liveChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Simulator and Traffic Log -->
+                <div class="dashboard-grid simulator-grid">
+                    <!-- Traffic Simulator Panel -->
+                    <div class="card simulator-card">
+                        <div class="card-header">
+                            <h3>Browser-Based Traffic Simulator</h3>
+                        </div>
+                        <div class="card-body">
+                            <p class="instructions">Simulate traffic directly from your browser to trigger system posture shifts (Nominal ➔ Alert ➔ Critical).</p>
+                            
+                            <div class="form-group">
+                                <label>Target Traffic Level</label>
+                                <div class="intensity-selector">
+                                    <button class="intensity-btn active" data-rps="0">⏹️ Stop</button>
+                                    <button class="intensity-btn" data-rps="5">🟢 Low (5 RPS)</button>
+                                    <button class="intensity-btn" data-rps="20">🟡 Med (20 RPS)</button>
+                                    <button class="intensity-btn" data-rps="65">🟠 High (65 RPS)</button>
+                                    <button class="intensity-btn" data-rps="110">🔴 Spike (110 RPS)</button>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="routeMix">Endpoint Mix Target</label>
+                                    <select id="routeMix" class="form-select">
+                                        <option value="balanced">Balanced Mix (Critical + Non-Critical)</option>
+                                        <option value="critical">Critical Endpoints Only (Checkout / Orders)</option>
+                                        <option value="noncritical">Non-Critical Endpoints Only (Ads / Products)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="clientAuth">Client Authentication</label>
+                                    <select id="clientAuth" class="form-select">
+                                        <option value="unauth">Unauthenticated (Stricter Limits)</option>
+                                        <option value="auth">Authenticated (Relaxed Limits)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="simulator-status-bar">
+                                <div class="sim-metric">Sent: <span id="simCount">0</span></div>
+                                <div class="sim-metric success">Success: <span id="simSuccess">0</span></div>
+                                <div class="sim-metric throttled">Shed/Throttled: <span id="simThrottled">0</span></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Live Terminal Output -->
+                    <div class="card terminal-card">
+                        <div class="card-header">
+                            <h3>Live Request Console</h3>
+                            <button class="btn btn-secondary" id="clearTerminalBtn" style="padding: 2px 8px; font-size: 11px;">Clear</button>
+                        </div>
+                        <div class="terminal-body" id="terminalConsole">
+                            <div class="term-line system-line">[SYSTEM] Console initialized. Standing by for traffic simulator...</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Explorer Tab -->
+            <section class="tab-content" id="tab-explorer">
+                <div class="explorer-container">
+                    <!-- Navigation for Explorer -->
+                    <div class="explorer-nav" id="explorerTabs">
+                        <button class="exp-tab active" data-exp="users" id="tabUsersBtn">Users (CRUD)</button>
+                        <button class="exp-tab" data-exp="products" id="tabProductsBtn">Products (CRUD)</button>
+                        <button class="exp-tab" data-exp="orders" id="tabOrdersBtn">Orders (Process)</button>
+                        <button class="exp-tab" data-exp="stress" id="tabStressBtn" style="display:none;">Stress Endpoints</button>
+                    </div>
+
+                    <!-- Users Panel -->
+                    <div class="explorer-panel active" id="panel-users">
+                        <div class="panel-layout">
+                            <div class="form-panel">
+                                <h3>Create New User</h3>
+                                <form id="createUserForm">
+                                    <div class="form-group">
+                                        <label for="userName">Name</label>
+                                        <input type="text" id="userName" required placeholder="e.g., Jane Doe" class="form-input">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="userEmail">Email</label>
+                                        <input type="email" id="userEmail" required placeholder="jane@example.com" class="form-input">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Add User</button>
+                                </form>
+                            </div>
+                            <div class="table-panel">
+                                <h3>Active Users</h3>
+                                <div class="table-container">
+                                    <table id="usersTable">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Name</th>
+                                                <th>Email</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr><td colspan="4" class="text-center">Loading Users...</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Products Panel -->
+                    <div class="explorer-panel" id="panel-products">
+                        <div class="panel-layout">
+                            <div class="form-panel">
+                                <h3>Create New Product</h3>
+                                <p class="note alert-text">⚠️ Note: Under CRITICAL posture, adding/fetching products will trigger HTTP 429 Shedding!</p>
+                                <form id="createProductForm">
+                                    <div class="form-group">
+                                        <label for="prodName">Product Name</label>
+                                        <input type="text" id="prodName" required placeholder="e.g., Quantum Processor" class="form-input">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="prodSku">SKU</label>
+                                        <input type="text" id="prodSku" required placeholder="e.g., SKU-QUANT-10" class="form-input">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="prodPrice">Price ($)</label>
+                                        <input type="number" id="prodPrice" required placeholder="299.99" step="0.01" class="form-input">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Add Product</button>
+                                </form>
+                            </div>
+                            <div class="table-panel">
+                                <h3>Product Catalog</h3>
+                                <div class="table-container">
+                                    <table id="productsTable">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Name</th>
+                                                <th>SKU</th>
+                                                <th>Price</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr><td colspan="5" class="text-center">Loading Products...</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Orders Panel -->
+                    <div class="explorer-panel" id="panel-orders">
+                        <div class="panel-layout">
+                            <div class="form-panel">
+                                <h3>Process New Order</h3>
+                                <p class="note success-text">✅ Note: Orders are CRITICAL routes. They remain available during Alert/Critical postures unless absolute database exhaustion occurs.</p>
+                                <form id="createOrderForm">
+                                    <div class="form-group">
+                                        <label for="orderUserId">User</label>
+                                        <select id="orderUserId" required class="form-select">
+                                            <option value="">Select a user...</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="orderProductId">Product</label>
+                                        <select id="orderProductId" required class="form-select">
+                                            <option value="">Select a product...</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="orderQuantity">Quantity</label>
+                                        <input type="number" id="orderQuantity" required min="1" value="1" class="form-input">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Submit Order</button>
+                                </form>
+                            </div>
+                            <div class="table-panel">
+                                <h3>Order Logs</h3>
+                                <div class="table-container">
+                                    <table id="ordersTable">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>User ID</th>
+                                                <th>Product ID</th>
+                                                <th>Quantity</th>
+                                                <th>Total Price</th>
+                                                <th>Date</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr><td colspan="6" class="text-center">Loading Orders...</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Stress Test Panel (For Isolated Mode) -->
+                    <div class="explorer-panel" id="panel-stress">
+                        <div class="stress-panel-layout">
+                            <div class="card">
+                                <div class="card-header"><h3>Trigger Endpoint Flows Manually</h3></div>
+                                <div class="card-body">
+                                    <div class="stress-buttons">
+                                        <div class="stress-box critical">
+                                            <h4>Payment Checkout (Critical)</h4>
+                                            <p>This path simulates vital checkout workflows. It remains open during high load.</p>
+                                            <button class="btn btn-primary" id="btnCheckoutFlow">Trigger /payment/checkout</button>
+                                        </div>
+                                        <div class="stress-box noncritical">
+                                            <h4>Promotions Ads (Non-Critical)</h4>
+                                            <p>Simulates background promotional ad placements. Automatically shed with HTTP 429 during load spikes.</p>
+                                            <button class="btn btn-warning" id="btnAdsFlow">Trigger /promotions/ads</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Historical Telemetry Tab -->
+            <section class="tab-content" id="tab-metrics">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Collected Historical Database Telemetry</h3>
+                        <button class="btn btn-secondary" id="refreshMetricsBtn">Refresh Logs</button>
+                    </div>
+                    <div class="card-body">
+                        <p class="instructions">These logs are gathered by the <code>MonitoringService</code> background worker, polling active APIs every 30 seconds to supply raw training data for the forecasting ML model.</p>
+                        <div class="table-container">
+                            <table id="metricsTable">
+                                <thead>
+                                    <tr>
+                                        <th>Timestamp (UTC)</th>
+                                        <th>Service</th>
+                                        <th>CPU Usage (%)</th>
+                                        <th>Memory (MB)</th>
+                                        <th>Request Count</th>
+                                        <th>Response Time (ms)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td colspan="6" class="text-center">Loading Monitoring Database logs...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- AI Model Trainer Tab -->
+            <section class="tab-content" id="tab-ml-model">
+                <div class="dashboard-grid ml-grid">
+                    <!-- Info/Actions Card -->
+                    <div class="card ml-card">
+                        <div class="card-header">
+                            <h3>ML.NET Model Status & Control</h3>
+                        </div>
+                        <div class="card-body">
+                            <p>The <code>PredictionService</code> uses an SDCA (Stochastic Dual Coordinate Ascent) Regression model to forecast system RPS based on current CPU, Memory, Request rates, and Response latency.</p>
+                            
+                            <div class="model-status-box">
+                                <div class="status-indicator ready" id="modelReadinessIndicator">Model Loaded</div>
+                                <div class="status-details">
+                                    <p>State: <strong id="modelStateText">Ready</strong></p>
+                                    <p>Source: <span id="modelSource">Shared volume (model.zip)</span></p>
+                                </div>
+                            </div>
+
+                            <div class="action-block">
+                                <h4>Train and Optimize Model</h4>
+                                <p class="note">Requires at least 10 entries in the historical metrics database. Clicking below compiles the latest database telemetry and saves a new model zip to the shared cluster volume.</p>
+                                <button class="btn btn-primary" id="btnTrainModel">⚡ Train Model Now</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Logs Console -->
+                    <div class="card ml-console-card">
+                        <div class="card-header">
+                            <h3>Model Training Console Logs</h3>
+                        </div>
+                        <div class="terminal-body" id="mlConsoleLog">
+                            <div class="term-line system-line">[SYSTEM] Ready to trigger model compilation...</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+</body>
+</html>

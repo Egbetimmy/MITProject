@@ -14,5 +14,11 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Infrastructure\AIScaling.PredictiveMiddleware\AIScaling.PredictiveMiddleware.csproj" />
   </ItemGroup>
-
+  <ItemGroup>
+    <Content Include="..\..\Shared\wwwroot\**\*.*">
+      <Link>wwwroot\%(RecursiveDir)%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
 </Project>

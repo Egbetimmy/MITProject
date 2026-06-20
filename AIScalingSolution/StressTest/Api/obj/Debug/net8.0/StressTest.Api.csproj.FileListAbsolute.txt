@@ -176,3 +176,10 @@ c:\Users\Timeyin.egbe\Documents\GitHub\MITProject\AIScalingSolution\StressTest\A
 c:\Users\Timeyin.egbe\Documents\GitHub\MITProject\AIScalingSolution\StressTest\Api\obj\Debug\net8.0\StressTest.Api.pdb
 c:\Users\Timeyin.egbe\Documents\GitHub\MITProject\AIScalingSolution\StressTest\Api\obj\Debug\net8.0\StressTest.Api.genruntimeconfig.cache
 c:\Users\Timeyin.egbe\Documents\GitHub\MITProject\AIScalingSolution\StressTest\Api\obj\Debug\net8.0\ref\StressTest.Api.dll
+C:\Users\Timeyin.egbe\Documents\GitHub\MITProject\AIScalingSolution\StressTest\Api\bin\Debug\net8.0\wwwroot\app.js
+C:\Users\Timeyin.egbe\Documents\GitHub\MITProject\AIScalingSolution\StressTest\Api\bin\Debug\net8.0\wwwroot\index.html
+C:\Users\Timeyin.egbe\Documents\GitHub\MITProject\AIScalingSolution\StressTest\Api\bin\Debug\net8.0\wwwroot\styles.css
+C:\Users\Timeyin.egbe\Documents\GitHub\MITProject\AIScalingSolution\StressTest\Api\bin\Debug\net8.0\StressTest.Api.staticwebassets.runtime.json
+C:\Users\Timeyin.egbe\Documents\GitHub\MITProject\AIScalingSolution\StressTest\Api\bin\Debug\net8.0\wwwroot\store-app.js
+C:\Users\Timeyin.egbe\Documents\GitHub\MITProject\AIScalingSolution\StressTest\Api\bin\Debug\net8.0\wwwroot\store-styles.css
+C:\Users\Timeyin.egbe\Documents\GitHub\MITProject\AIScalingSolution\StressTest\Api\bin\Debug\net8.0\wwwroot\store.html
