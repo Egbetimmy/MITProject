@@ -3,6 +3,7 @@ using AIScaling.Shared.DTOs;
 using AIScaling.Shared.Logging;
 using AIScaling.Shared.Models;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.ML;
 using Microsoft.ML.Data;
 using PredictionService.Application.Interfaces;
@@ -12,7 +13,7 @@ namespace PredictionService.Infrastructure.Services;
 /// <summary>ML.NET training and prediction pipeline.</summary>
 public sealed class MlPredictionService : IPredictionAppService
 {
-    private readonly IMetricsDataLoader _dataLoader;
+    private readonly IServiceProvider _serviceProvider;
     private readonly IScalingLogger _scalingLogger;
     private readonly string _modelPath;
     private readonly MLContext _mlContext = new(seed: 0);
@@ -31,11 +32,11 @@ public sealed class MlPredictionService : IPredictionAppService
     }
 
     public MlPredictionService(
-        IMetricsDataLoader dataLoader,
+        IServiceProvider serviceProvider,
         IScalingLogger scalingLogger,
         IConfiguration configuration)
     {
-        _dataLoader = dataLoader;
+        _serviceProvider = serviceProvider;
         _scalingLogger = scalingLogger;
         _modelPath = configuration["MlNet:ModelPath"] ?? Path.Combine(AppContext.BaseDirectory, "model.zip");
         TryLoadModel();
@@ -43,7 +44,9 @@ public sealed class MlPredictionService : IPredictionAppService
 
     public async Task<string> TrainModelAsync(CancellationToken cancellationToken = default)
     {
-        var data = await _dataLoader.LoadHistoricalMetricsAsync(cancellationToken);
+        using var scope = _serviceProvider.CreateScope();
+        var dataLoader = scope.ServiceProvider.GetRequiredService<IMetricsDataLoader>();
+        var data = await dataLoader.LoadHistoricalMetricsAsync(cancellationToken);
         if (data.Count < 10)
             throw new InvalidOperationException("Insufficient historical metrics for training (minimum 10 records).");
 

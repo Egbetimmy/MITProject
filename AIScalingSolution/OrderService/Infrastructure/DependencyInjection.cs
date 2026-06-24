@@ -14,7 +14,7 @@ public static class DependencyInjection
     public static IServiceCollection AddOrderInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddDbContext<OrderDbContext>(options =>
-            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")).ConfigureWarnings(warnings => warnings.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning)));
         services.AddScoped<IOrderRepository, OrderRepository>();
         services.AddScoped<IOrderAppService, OrderAppService>();
         return services;
@@ -24,7 +24,8 @@ public static class DependencyInjection
     {
         using var scope = services.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<OrderDbContext>();
-        await context.Database.MigrateAsync();
+        await context.Database.EnsureDeletedAsync();
+        await context.Database.EnsureCreatedAsync();
         await OrderDbSeed.SeedAsync(context);
     }
 }

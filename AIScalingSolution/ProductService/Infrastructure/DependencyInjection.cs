@@ -14,7 +14,7 @@ public static class DependencyInjection
     public static IServiceCollection AddProductInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddDbContext<ProductDbContext>(options =>
-            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")).ConfigureWarnings(warnings => warnings.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning)));
         services.AddScoped<IProductRepository, ProductRepository>();
         services.AddScoped<IProductAppService, ProductAppService>();
         return services;
@@ -24,7 +24,8 @@ public static class DependencyInjection
     {
         using var scope = services.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<ProductDbContext>();
-        await context.Database.MigrateAsync();
+        await context.Database.EnsureDeletedAsync();
+        await context.Database.EnsureCreatedAsync();
         await ProductDbSeed.SeedAsync(context);
     }
 }

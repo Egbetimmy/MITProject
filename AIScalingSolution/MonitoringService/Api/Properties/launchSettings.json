@@ -1,9 +1,12 @@
 {
-  "profiles": {
-    "MonitoringService.Api": {
-      "commandName": "Project",
-      "launchUrl": "swagger",
-      "applicationUrl": "http://localhost:5004"
-    }
-  }
+    "profiles":  {
+                     "MonitoringService.Api":  {
+                                                   "commandName":  "Project",
+                                                   "launchUrl":  "swagger",
+                                                   "applicationUrl":  "http://localhost:5004",
+                                                   "environmentVariables":  {
+                                                                                "ASPNETCORE_ENVIRONMENT":  "Development"
+                                                                            }
+                                               }
+                 }
 }

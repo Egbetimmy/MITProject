@@ -15,7 +15,7 @@ public static class DependencyInjection
     public static IServiceCollection AddMonitoringInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddDbContext<MonitoringDbContext>(options =>
-            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")).ConfigureWarnings(warnings => warnings.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning)));
 
         services.AddHttpClient("metrics", client => client.Timeout = TimeSpan.FromSeconds(10));
         services.AddScoped<IMetricRepository, MetricRepository>();
@@ -29,7 +29,8 @@ public static class DependencyInjection
     {
         using var scope = services.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<MonitoringDbContext>();
-        await context.Database.MigrateAsync();
+        await context.Database.EnsureDeletedAsync();
+        await context.Database.EnsureCreatedAsync();
         await MonitoringDbSeed.SeedAsync(context);
     }
 }

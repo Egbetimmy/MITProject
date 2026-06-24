@@ -1,9 +1,12 @@
 {
-  "profiles": {
-    "ProductService.Api": {
-      "commandName": "Project",
-      "launchUrl": "swagger",
-      "applicationUrl": "http://localhost:5002"
-    }
-  }
+    "profiles":  {
+                     "ProductService.Api":  {
+                                                "commandName":  "Project",
+                                                "launchUrl":  "swagger",
+                                                "applicationUrl":  "http://localhost:5002",
+                                                "environmentVariables":  {
+                                                                             "ASPNETCORE_ENVIRONMENT":  "Development"
+                                                                         }
+                                            }
+                 }
 }

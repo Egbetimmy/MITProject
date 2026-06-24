@@ -29,13 +29,18 @@ public sealed class AdaptiveClientRateLimiter
     private sealed class ClientBucketState
     {
         private readonly object _sync = new();
-        private double _tokens;
+        private double _tokens = -1d;
         private long _lastRefillTicks = Environment.TickCount64;
 
         public bool TryConsume(int limitPerMinute, out TimeSpan retryAfter)
         {
             lock (_sync)
             {
+                if (_tokens < 0d)
+                {
+                    _tokens = limitPerMinute;
+                }
+
                 Refill(limitPerMinute);
 
                 if (_tokens >= 1d)

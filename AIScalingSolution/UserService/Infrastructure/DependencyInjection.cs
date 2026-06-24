@@ -17,7 +17,7 @@ public static class DependencyInjection
         IConfiguration configuration)
     {
         services.AddDbContext<UserDbContext>(options =>
-            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")).ConfigureWarnings(warnings => warnings.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning)));
 
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IUserAppService, UserAppService>();
@@ -29,7 +29,8 @@ public static class DependencyInjection
     {
         using var scope = services.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<UserDbContext>();
-        await context.Database.MigrateAsync();
+        await context.Database.EnsureDeletedAsync();
+        await context.Database.EnsureCreatedAsync();
         await UserDbSeed.SeedAsync(context);
     }
 }
