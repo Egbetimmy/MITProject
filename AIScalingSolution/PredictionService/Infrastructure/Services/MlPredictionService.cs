@@ -57,7 +57,7 @@ public sealed class MlPredictionService : IPredictionAppService
                 nameof(MetricData.RequestCount),
                 nameof(MetricData.ResponseTime))
             .Append(_mlContext.Regression.Trainers.Sdca(
-                labelColumnName: nameof(MetricData.PredictedRequestLoad),
+                labelColumnName: "Label",
                 featureColumnName: "Features"));
 
         _model = pipeline.Fit(trainData);

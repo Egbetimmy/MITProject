@@ -26,6 +26,7 @@ public sealed class PredictionsController : ControllerBase
         }
         catch (Exception ex)
         {
+            Console.Error.WriteLine(ex);
             return BadRequest(ApiResponse<string>.Fail(ex.Message));
         }
     }

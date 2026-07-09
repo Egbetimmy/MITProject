@@ -27,6 +27,7 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Production
       ConnectionStrings__DefaultConnection: "Server=sqlserver;Database=UserDb;User Id=sa;Password=Your_strong_Password123;TrustServerCertificate=True;"
+      DOTNET_ROLL_FORWARD: Major
 
   productservice:
     build:
@@ -39,6 +40,7 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Production
       ConnectionStrings__DefaultConnection: "Server=sqlserver;Database=ProductDb;User Id=sa;Password=Your_strong_Password123;TrustServerCertificate=True;"
+      DOTNET_ROLL_FORWARD: Major
 
   orderservice:
     build:
@@ -51,6 +53,7 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Production
       ConnectionStrings__DefaultConnection: "Server=sqlserver;Database=OrderDb;User Id=sa;Password=Your_strong_Password123;TrustServerCertificate=True;"
+      DOTNET_ROLL_FORWARD: Major
 
   monitoringservice:
     build:
@@ -69,6 +72,7 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Production
       ConnectionStrings__DefaultConnection: "Server=sqlserver;Database=MonitoringDb;User Id=sa;Password=Your_strong_Password123;TrustServerCertificate=True;"
+      DOTNET_ROLL_FORWARD: Major
 
   predictionservice:
     build:
@@ -83,9 +87,10 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Production
       ConnectionStrings__MonitoringConnection: "Server=sqlserver;Database=MonitoringDb;User Id=sa;Password=Your_strong_Password123;TrustServerCertificate=True;"
-      MlNet__ModelPath: "/app/model.zip"
+      MlNet__ModelPath: "/app/models/model.zip"
+      DOTNET_ROLL_FORWARD: Major
     volumes:
-      - ml-models:/app
+      - ml-models:/app/models
 
   redis:
     image: redis:7-alpine
@@ -125,6 +130,7 @@ services:
       PredictiveMiddleware__Diagnostics__IntervalSeconds: 2
       GatewayIntelligence__MonitoringBaseUrl: http://monitoringservice:8080
       GatewayIntelligence__PredictionBaseUrl: http://predictionservice:8080
+      DOTNET_ROLL_FORWARD: Major
 
 volumes:
   sqlserver-data:

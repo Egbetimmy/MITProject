@@ -13,6 +13,10 @@ WORKDIR "/src/ApiGateway"
 RUN dotnet publish "ApiGateway.csproj" -c Release -o /app/publish /p:UseAppHost=false
 FROM base AS final
 WORKDIR /app
+RUN apt-get update && apt-get install -y --no-install-recommends libomp5 libomp-dev && \
+    ln -sf /usr/lib/x86_64-linux-gnu/libomp5.so /usr/lib/x86_64-linux-gnu/libiomp5.so && \
+    ln -sf /usr/lib/x86_64-linux-gnu/libomp5.so /usr/lib/libiomp5.so && \
+    rm -rf /var/lib/apt/lists/*
 COPY --from=build /app/publish .
 ENV ASPNETCORE_URLS=http://+:8080
 ENTRYPOINT ["dotnet", "ApiGateway.dll"]

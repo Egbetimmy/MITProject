@@ -4,10 +4,22 @@ import { Chart, registerables } from 'chart.js';
 // Register Chart.js modules
 Chart.register(...registerables);
 
+const GATEWAY_URL = 'http://localhost:5000';
+
 export default function App() {
   // Navigation
   const [activeTab, setActiveTab] = useState('store'); // 'store' or 'operator'
   const [activeExplorerTab, setActiveExplorerTab] = useState('users'); // 'users', 'products', 'orders', 'stress'
+
+  // Toast notifications state
+  const [toasts, setToasts] = useState([]);
+  const showToast = useCallback((message, type = 'info') => {
+    const id = Date.now() + Math.random();
+    setToasts(prev => [...prev, { id, message, type }]);
+    setTimeout(() => {
+      setToasts(prev => prev.filter(t => t.id !== id));
+    }, 4000);
+  }, []);
 
   // Global Sync States
   const [users, setUsers] = useState([]);
@@ -33,11 +45,17 @@ export default function App() {
 
   // Traffic Simulator State
   const [simIntensityRps, setSimIntensityRps] = useState(0);
+  const [simDurationSeconds, setSimDurationSeconds] = useState(60);
+  const [simTargetRps, setSimTargetRps] = useState(110);
+  const [isSimulatorRunning, setIsSimulatorRunning] = useState(false);
+  const [simTimeLeft, setSimTimeLeft] = useState(0);
   const [simRouteMix, setSimRouteMix] = useState('balanced');
   const [simClientAuth, setSimClientAuth] = useState('unauth');
   const [simStats, setSimStats] = useState({ sent: 0, success: 0, throttled: 0 });
   const [terminalLogs, setTerminalLogs] = useState([{ time: new Date().toLocaleTimeString(), message: '[SYSTEM] Console initialized. Standing by for traffic simulator...', type: 'system' }]);
   const [mockThrottledCounter, setMockThrottledCounter] = useState(0);
+  const [simSummary, setSimSummary] = useState(null);
+  const simStartTimeRef = useRef(null);
 
   // Historical Telemetry & ML State
   const [historicalMetrics, setHistoricalMetrics] = useState([]);
@@ -49,6 +67,34 @@ export default function App() {
   const chartRef = useRef(null);
   const chartInstanceRef = useRef(null);
   const chartDataRef = useRef({ rps: Array(30).fill(0), forecast: Array(30).fill(0) });
+
+  const simulatorTerminalRef = useRef(null);
+  const trainingTerminalRef = useRef(null);
+  const countdownIntervalRef = useRef(null);
+  const simStatsRef = useRef(simStats);
+  const mockThrottledCounterRef = useRef(mockThrottledCounter);
+
+  useEffect(() => {
+    simStatsRef.current = simStats;
+  }, [simStats]);
+
+  useEffect(() => {
+    mockThrottledCounterRef.current = mockThrottledCounter;
+  }, [mockThrottledCounter]);
+
+  // Auto-scroll simulator terminal logs
+  useEffect(() => {
+    if (simulatorTerminalRef.current) {
+      simulatorTerminalRef.current.scrollTop = simulatorTerminalRef.current.scrollHeight;
+    }
+  }, [terminalLogs]);
+
+  // Auto-scroll ML training terminal logs
+  useEffect(() => {
+    if (trainingTerminalRef.current) {
+      trainingTerminalRef.current.scrollTop = trainingTerminalRef.current.scrollHeight;
+    }
+  }, [mlConsoleLogs]);
 
   // Refs for simulator interval
   const simIntensityRef = useRef(simIntensityRps);
@@ -78,7 +124,7 @@ export default function App() {
   const loadCrudData = useCallback(async () => {
     try {
       // Users
-      const resUsers = await fetch('/users');
+      const resUsers = await fetch(`${GATEWAY_URL}/users`);
       if (resUsers.ok) {
         const data = await resUsers.json();
         const fetchedUsers = data.data || [];
@@ -89,14 +135,14 @@ export default function App() {
       }
       
       // Products
-      const resProds = await fetch('/products');
+      const resProds = await fetch(`${GATEWAY_URL}/products`);
       if (resProds.ok) {
         const data = await resProds.json();
         setProducts(data.data || []);
       }
       
       // Orders
-      const resOrders = await fetch('/orders');
+      const resOrders = await fetch(`${GATEWAY_URL}/orders`);
       if (resOrders.ok) {
         const data = await resOrders.json();
         setOrders(data.data || []);
@@ -109,7 +155,7 @@ export default function App() {
   // Fetch products catalog specifically (supports shedding check)
   const fetchProductsCatalog = useCallback(async () => {
     try {
-      const res = await fetch('/products');
+      const res = await fetch(`${GATEWAY_URL}/products`);
       if (res.status === 429) {
         setIsCatalogOffline(true);
         return;
@@ -130,7 +176,7 @@ export default function App() {
   // Poll diagnostics endpoint
   const pollDiagnostics = useCallback(async () => {
     try {
-      const res = await fetch('/api/diagnostics');
+      const res = await fetch(`${GATEWAY_URL}/api/diagnostics`);
       if (res.ok) {
         const data = await res.json();
         
@@ -228,7 +274,7 @@ export default function App() {
 
   // Chart.js initialization
   useEffect(() => {
-    if (!chartRef.current) return;
+    if (activeTab !== 'operator' || !chartRef.current) return;
     
     const ctx = chartRef.current.getContext('2d');
     const labels = Array(30).fill(0).map((_, i) => `${29 - i}s ago`);
@@ -282,9 +328,10 @@ export default function App() {
     return () => {
       if (chartInstanceRef.current) {
         chartInstanceRef.current.destroy();
+        chartInstanceRef.current = null;
       }
     };
-  }, []);
+  }, [activeTab]);
 
   // Simulator Call Loop
   useEffect(() => {
@@ -317,9 +364,10 @@ export default function App() {
 
       setSimStats(prev => ({ ...prev, sent: prev.sent + 1 }));
       
+      const clientIndex = Math.floor(Math.random() * 5);
       const headers = {
         'Content-Type': 'application/json',
-        'X-Correlation-Id': `react-sim-${Math.floor(Math.random() * 100000)}`
+        'X-Correlation-Id': `react-sim-client-${clientIndex}`
       };
       if (clientAuth === 'auth') {
         headers['Authorization'] = 'Bearer simulated-react-user';
@@ -327,7 +375,8 @@ export default function App() {
 
       const start = performance.now();
       try {
-        const res = await fetch(path, { method, headers, body });
+        const url = method === 'GET' ? `${GATEWAY_URL}${path}?_cb=${Date.now()}` : `${GATEWAY_URL}${path}`;
+        const res = await fetch(url, { method, headers, body });
         const elapsed = Math.round(performance.now() - start);
         const status = res.status;
 
@@ -351,6 +400,61 @@ export default function App() {
     return () => clearInterval(timer);
   }, [simIntensityRps, logTerminal]);
 
+  const startSimulation = () => {
+    setSimStats({ sent: 0, success: 0, throttled: 0 });
+    setMockThrottledCounter(0);
+    simStartTimeRef.current = Date.now();
+    setSimIntensityRps(simTargetRps);
+    setIsSimulatorRunning(true);
+    setSimTimeLeft(simDurationSeconds);
+    logTerminal(`[SYSTEM] Starting custom simulation: ${simTargetRps} RPS for ${simDurationSeconds} seconds.`, 'system');
+
+    if (countdownIntervalRef.current) clearInterval(countdownIntervalRef.current);
+    let secondsLeft = simDurationSeconds;
+    countdownIntervalRef.current = setInterval(() => {
+      secondsLeft -= 1;
+      setSimTimeLeft(secondsLeft);
+      if (secondsLeft <= 0) {
+        stopSimulation(true);
+      }
+    }, 1000);
+  };
+
+  const stopSimulation = (reachedEnd = false) => {
+    if (countdownIntervalRef.current) {
+      clearInterval(countdownIntervalRef.current);
+      countdownIntervalRef.current = null;
+    }
+    setSimIntensityRps(0);
+    setIsSimulatorRunning(false);
+    setSimTimeLeft(0);
+    
+    const elapsed = Math.max(1, Math.round((Date.now() - simStartTimeRef.current) / 1000));
+    logTerminal(`[SYSTEM] Simulation stopped. Duration: ${elapsed}s.`, 'system');
+
+    setSimSummary({
+      sent: simStatsRef.current.sent,
+      success: simStatsRef.current.success,
+      throttled: simStatsRef.current.throttled + mockThrottledCounterRef.current,
+      durationSeconds: elapsed,
+      routeMix: simRouteMix,
+      clientAuth: simClientAuth
+    });
+  };
+
+  const downloadChart = () => {
+    if (!chartRef.current) return;
+    // Force white background for downloaded image if transparent, or just export raw PNG
+    const url = chartRef.current.toDataURL('image/png');
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `traffic-acceleration-chart-${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.png`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    showToast('Chart image downloaded!', 'success');
+  };
+
   // Add Item to Store Cart
   const addToCart = (product) => {
     setCart(prev => {
@@ -361,6 +465,7 @@ export default function App() {
       return [...prev, { product, quantity: 1 }];
     });
     setIsCartOpen(true);
+    showToast(`Added ${product.name} to cart!`, 'success');
   };
 
   // Modify cart item quantity
@@ -388,7 +493,7 @@ export default function App() {
 
     try {
       for (const item of cart) {
-        const res = await fetch('/orders', {
+        const res = await fetch(`${GATEWAY_URL}/orders`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -411,7 +516,7 @@ export default function App() {
       setIsCartOpen(false);
       loadCrudData(); // Reload orders database logs
     } catch (err) {
-      alert(`Checkout failed: ${err.message}. Orders are gated by database capacity.`);
+      showToast(`Checkout failed: ${err.message}. Orders are gated by database capacity.`, 'error');
     } finally {
       setIsCheckingOut(false);
     }
@@ -423,19 +528,20 @@ export default function App() {
     const name = e.target.userName.value;
     const email = e.target.userEmail.value;
     try {
-      const res = await fetch('/users', {
+      const res = await fetch(`${GATEWAY_URL}/users`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email })
       });
       if (res.ok) {
+        showToast('User created successfully!', 'success');
         e.target.reset();
         loadCrudData();
       } else {
-        alert('Failed to add user');
+        showToast('Failed to add user', 'error');
       }
     } catch (err) {
-      alert(err.message);
+      showToast(err.message, 'error');
     }
   };
 
@@ -446,25 +552,26 @@ export default function App() {
     const price = parseFloat(e.target.prodPrice.value);
     
     try {
-      const res = await fetch('/products', {
+      const res = await fetch(`${GATEWAY_URL}/products`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, sku, price })
       });
       
       if (res.status === 429) {
-        alert('❌ Request Shedded (429)! Cannot add products while system posture is CRITICAL.');
+        showToast('Request Shedded (429)! Cannot add products while system posture is CRITICAL.', 'error');
         return;
       }
       
       if (res.ok) {
+        showToast('Product created successfully!', 'success');
         e.target.reset();
         loadCrudData();
       } else {
-        alert('Failed to add product');
+        showToast('Failed to add product', 'error');
       }
     } catch (err) {
-      alert(err.message);
+      showToast(err.message, 'error');
     }
   };
 
@@ -475,43 +582,46 @@ export default function App() {
     const quantity = parseInt(e.target.orderQuantity.value);
 
     try {
-      const res = await fetch('/orders', {
+      const res = await fetch(`${GATEWAY_URL}/orders`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId, productId, quantity })
       });
       if (res.ok) {
+        showToast('Order created successfully!', 'success');
         e.target.reset();
         loadCrudData();
       } else {
-        alert('Failed to process order');
+        showToast('Failed to process order', 'error');
       }
     } catch (err) {
-      alert(err.message);
+      showToast(err.message, 'error');
     }
   };
 
   const handleDeleteUser = async (id) => {
     if (!confirm(`Delete user ${id}?`)) return;
     try {
-      await fetch(`/users/${id}`, { method: 'DELETE' });
+      await fetch(`${GATEWAY_URL}/users/${id}`, { method: 'DELETE' });
+      showToast(`User ${id} deleted successfully!`, 'success');
       loadCrudData();
     } catch (err) {
-      alert(err.message);
+      showToast(err.message, 'error');
     }
   };
 
   const handleDeleteProduct = async (id) => {
     if (!confirm(`Delete product ${id}?`)) return;
     try {
-      const res = await fetch(`/products/${id}`, { method: 'DELETE' });
+      const res = await fetch(`${GATEWAY_URL}/products/${id}`, { method: 'DELETE' });
       if (res.status === 429) {
-        alert('❌ Request Shedded (429)! Cannot delete products while system posture is CRITICAL.');
+        showToast('Request Shedded (429)! Cannot delete products while system posture is CRITICAL.', 'error');
         return;
       }
+      showToast(`Product ${id} deleted successfully!`, 'success');
       loadCrudData();
     } catch (err) {
-      alert(err.message);
+      showToast(err.message, 'error');
     }
   };
 
@@ -519,7 +629,7 @@ export default function App() {
   const loadHistoricalMetrics = async () => {
     setMetricsLoading(true);
     try {
-      const res = await fetch('/monitoring/metrics');
+      const res = await fetch(`${GATEWAY_URL}/monitoring/metrics`);
       const json = await res.json();
       setHistoricalMetrics(json.data || []);
     } catch (err) {
@@ -535,7 +645,7 @@ export default function App() {
     setMlConsoleLogs(prev => [...prev, { time: new Date().toLocaleTimeString(), message: '[SYSTEM] Compiling latest metrics and refitting regression tree...', type: 'system' }]);
     
     try {
-      const res = await fetch('/prediction/predictions/train', { method: 'POST' });
+      const res = await fetch(`${GATEWAY_URL}/prediction/predictions/train`, { method: 'POST' });
       const json = await res.json();
       if (res.ok) {
         setMlConsoleLogs(prev => [
@@ -552,9 +662,14 @@ export default function App() {
       setIsTraining(false);
     }
   };
-
   return (
     <div className="store-container">
+      {/* Background Ambient Orbs */}
+      <div className="glow-container">
+        <div className="glow-orb orb-1"></div>
+        <div className="glow-orb orb-2"></div>
+      </div>
+
       {/* Top Navigation Navbar */}
       <nav className="navbar">
         <div className="nav-logo" onClick={() => { setActiveTab('store'); fetchProductsCatalog(); }}>
@@ -668,11 +783,19 @@ export default function App() {
               ) : (
                 products.map(p => (
                   <div className="product-card" key={p.id}>
-                    <div className="product-img-placeholder">
-                      {p.sku.includes('QUANT') ? '💻' : p.sku.includes('CORE') ? '⚡' : '💾'}
+                    <div className="product-img-container">
+                      {p.name?.toLowerCase().includes('laptop') ? (
+                        <img src="/laptop.png" alt="Laptop" className="product-img" />
+                      ) : p.name?.toLowerCase().includes('mouse') ? (
+                        <img src="/mouse.png" alt="Mouse" className="product-img" />
+                      ) : p.name?.toLowerCase().includes('keyboard') ? (
+                        <img src="/keyboard.png" alt="Keyboard" className="product-img" />
+                      ) : (
+                        <div className="product-img-placeholder" style={{ fontSize: '36px' }}>💾</div>
+                      )}
                     </div>
                     <div className="product-info">
-                      <span className="product-sku">{p.sku}</span>
+                      <span className="product-sku">{p.sku || `SKU-${p.name?.toUpperCase().substring(0, 5).replace(/\s+/g, '')}-0${p.id}`}</span>
                       <h4 className="product-name">{p.name}</h4>
                     </div>
                     <div className="product-footer">
@@ -717,19 +840,19 @@ export default function App() {
               </div>
               <div className="stats-grid">
                 <div className="stat-item">
-                  <span class="stat-label">Current Load</span>
+                  <span className="stat-label">Current Load</span>
                   <span className="stat-value">{currentRps.toFixed(1)} <span className="unit">RPS</span></span>
                 </div>
                 <div className="stat-item">
-                  <span class="stat-label">60s Forecast</span>
+                  <span className="stat-label">60s Forecast</span>
                   <span className="stat-value">{forecastedRps.toFixed(1)} <span className="unit">RPS</span></span>
                 </div>
                 <div className="stat-item">
-                  <span class="stat-label">Throttled (429)</span>
+                  <span className="stat-label">Throttled (429)</span>
                   <span className="stat-value alert-text">{throttledCount + mockThrottledCounter}</span>
                 </div>
                 <div className="stat-item">
-                  <span class="stat-label">P99 Overhead</span>
+                  <span className="stat-label">P99 Overhead</span>
                   <span className="stat-value">{p99Overhead.toFixed(2)} <span className="unit">ms</span></span>
                 </div>
               </div>
@@ -738,8 +861,11 @@ export default function App() {
 
           {/* Graph Card */}
           <div className="card chart-card">
-            <div className="card-header">
+            <div className="card-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <h3>Live Traffic Acceleration (Chart)</h3>
+              <button className="btn-add" style={{ padding: '4px 12px', fontSize: '12px' }} onClick={downloadChart}>
+                📥 Download Chart
+              </button>
             </div>
             <div className="chart-container" style={{ height: '220px' }}>
               <canvas ref={chartRef}></canvas>
@@ -753,27 +879,44 @@ export default function App() {
                 <h3>Simulate Traffic</h3>
               </div>
               <div className="card-body">
-                <p className="instructions">Send synthetic traffic loops from the browser. Accelerate RPS levels to trigger prediction spikes.</p>
+                <p className="instructions">Configure target load intensity and run time to simulate traffic conditions.</p>
                 
-                <div className="form-group">
-                  <label>Traffic Rate</label>
-                  <div className="intensity-selector">
-                    {[0, 5, 20, 65, 110].map(val => (
-                      <button 
-                        key={val}
-                        className={`intensity-btn ${simIntensityRps === val ? 'active' : ''}`}
-                        onClick={() => { setSimIntensityRps(val); if (val === 0) setMockThrottledCounter(0); }}
-                      >
-                        {val === 0 ? '⏹️ Stop' : val === 5 ? '🟢 5 RPS' : val === 20 ? '🟡 20 RPS' : val === 65 ? '🟠 65 RPS' : '🔴 110 RPS'}
-                      </button>
-                    ))}
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Target RPS ({simTargetRps} RPS)</label>
+                    <input 
+                      type="range" 
+                      min="5" 
+                      max="150" 
+                      step="5"
+                      value={simTargetRps} 
+                      disabled={isSimulatorRunning}
+                      onChange={(e) => setSimTargetRps(parseInt(e.target.value))}
+                      className="form-range"
+                      style={{ width: '100%', accentColor: 'var(--color-accent)' }}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Duration (Seconds)</label>
+                    <select 
+                      className="form-select" 
+                      value={simDurationSeconds} 
+                      disabled={isSimulatorRunning}
+                      onChange={(e) => setSimDurationSeconds(parseInt(e.target.value))}
+                    >
+                      <option value={10}>10 Seconds (Quick)</option>
+                      <option value={30}>30 Seconds</option>
+                      <option value={60}>60 Seconds (1 Min)</option>
+                      <option value={120}>120 Seconds (2 Min)</option>
+                      <option value={300}>300 Seconds (5 Min)</option>
+                    </select>
                   </div>
                 </div>
 
                 <div className="form-row">
                   <div className="form-group">
                     <label>Endpoints Target</label>
-                    <select className="form-select" value={simRouteMix} onChange={(e) => setSimRouteMix(e.target.value)}>
+                    <select className="form-select" disabled={isSimulatorRunning} value={simRouteMix} onChange={(e) => setSimRouteMix(e.target.value)}>
                       <option value="balanced">Balanced Mix</option>
                       <option value="critical">Critical Only (/orders)</option>
                       <option value="noncritical">Non-Critical Only (/products)</option>
@@ -781,14 +924,41 @@ export default function App() {
                   </div>
                   <div className="form-group">
                     <label>Client Auth</label>
-                    <select className="form-select" value={simClientAuth} onChange={(e) => setSimClientAuth(e.target.value)}>
+                    <select className="form-select" disabled={isSimulatorRunning} value={simClientAuth} onChange={(e) => setSimClientAuth(e.target.value)}>
                       <option value="unauth">Unauthenticated</option>
                       <option value="auth">Authenticated</option>
                     </select>
                   </div>
                 </div>
 
-                <div className="simulator-status-bar">
+                {isSimulatorRunning ? (
+                  <div style={{ marginTop: '16px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', marginBottom: '6px' }}>
+                      <span style={{ color: 'var(--color-accent)', fontWeight: 600 }}>⚡ Custom Load Active...</span>
+                      <span><strong>{simTimeLeft}s</strong> remaining</span>
+                    </div>
+                    <div className="progress-bar-bg" style={{ width: '100%', height: '6px', backgroundColor: 'rgba(255,255,255,0.05)', borderRadius: '3px', overflow: 'hidden' }}>
+                      <div className="progress-bar-fill" style={{ width: `${(simTimeLeft / simDurationSeconds) * 100}%`, height: '100%', backgroundColor: 'var(--color-accent)', boxShadow: '0 0 8px var(--color-accent)', transition: 'width 1s linear' }}></div>
+                    </div>
+                    <button 
+                      className="btn" 
+                      style={{ width: '100%', marginTop: '15px', backgroundColor: 'var(--color-critical)', color: 'white' }}
+                      onClick={() => stopSimulation(false)}
+                    >
+                      ⏹️ Stop Simulation
+                    </button>
+                  </div>
+                ) : (
+                  <button 
+                    className="btn btn-primary" 
+                    style={{ width: '100%', marginTop: '15px' }}
+                    onClick={startSimulation}
+                  >
+                    🚀 Start Simulation Run
+                  </button>
+                )}
+
+                <div className="simulator-status-bar" style={{ marginTop: '20px' }}>
                   <div className="sim-metric">Sent: <span>{simStats.sent}</span></div>
                   <div className="sim-metric success">Success: <span>{simStats.success}</span></div>
                   <div className="sim-metric throttled">Throttled: <span>{simStats.throttled + mockThrottledCounter}</span></div>
@@ -802,7 +972,7 @@ export default function App() {
                 <h3>Simulator Console Output</h3>
                 <button className="btn-add" style={{ padding: '2px 8px', fontSize: '10px' }} onClick={() => setTerminalLogs([])}>Clear</button>
               </div>
-              <div className="terminal-body" style={{ flexGrow: 1, minHeight: '180px' }}>
+              <div ref={simulatorTerminalRef} className="terminal-body" style={{ flexGrow: 1, minHeight: '180px' }}>
                 {terminalLogs.map((log, idx) => (
                   <div key={idx} className={`term-line ${log.type === 'error' ? 'error-line' : log.type === 'system' ? 'system-line' : 'success-line'}`}>
                     [{log.time}] {log.message}
@@ -913,7 +1083,7 @@ export default function App() {
                             <tr key={p.id}>
                               <td>{p.id}</td>
                               <td><strong>{p.name}</strong></td>
-                              <td><code>{p.sku}</code></td>
+                              <td><code>{p.sku || `SKU-${p.name?.toUpperCase().substring(0, 5).replace(/\s+/g, '')}-0${p.id}`}</code></td>
                               <td>${p.price.toFixed(2)}</td>
                               <td><button className="btn-add" style={{ backgroundColor: 'var(--color-critical)' }} onClick={() => handleDeleteProduct(p.id)}>Delete</button></td>
                             </tr>
@@ -1021,13 +1191,13 @@ export default function App() {
                     <div className="card-body">
                       <p>Train and refit the ML.NET SDCA regression model using metric records logged in the SQL server database.</p>
                       <button className="btn btn-primary" disabled={isTraining} onClick={triggerModelTraining}>
-                        {isTraining ? 'Training Model...' : '⚡ Run Model Training'}
+                        {isTraining ? <><span className="spinner"></span>Training Model...</> : '⚡ Run Model Training'}
                       </button>
                     </div>
                   </div>
                   <div className="card ml-console-card">
                     <div className="card-header"><h3>stdout training log</h3></div>
-                    <div className="terminal-body">
+                    <div ref={trainingTerminalRef} className="terminal-body">
                       {mlConsoleLogs.map((log, idx) => (
                         <div key={idx} className={`term-line ${log.type === 'error' ? 'error-line' : 'success-line'}`}>
                           [{log.time}] {log.message}
@@ -1106,6 +1276,61 @@ export default function App() {
           </div>
         </div>
       )}
+
+      {/* Simulator Summary Modal */}
+      {simSummary && (
+        <div className="modal-overlay">
+          <div className="modal-content" style={{ maxWidth: '450px' }}>
+            <span className="success-icon" style={{ fontSize: '32px' }}>📊</span>
+            <h4 style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '20px', marginBottom: '8px' }}>Simulation Summary Report</h4>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '13px', marginBottom: '16px' }}>
+              Synthetic traffic simulation has terminated. Below is the diagnostic footprint captured at the client side.
+            </p>
+            
+            <div className="summary-metrics-list" style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '20px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 12px', backgroundColor: 'rgba(255,255,255,0.02)', borderRadius: '8px', border: '1px solid var(--border-color)', fontSize: '13px' }}>
+                <span style={{ color: 'var(--text-secondary)' }}>Duration:</span>
+                <span style={{ fontWeight: 600 }}>{simSummary.durationSeconds} seconds</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 12px', backgroundColor: 'rgba(255,255,255,0.02)', borderRadius: '8px', border: '1px solid var(--border-color)', fontSize: '13px' }}>
+                <span style={{ color: 'var(--text-secondary)' }}>Total Requests Sent:</span>
+                <span style={{ fontWeight: 600 }}>{simSummary.sent}</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 12px', backgroundColor: 'rgba(16, 185, 129, 0.04)', borderRadius: '8px', border: '1px solid rgba(16, 185, 129, 0.15)', fontSize: '13px' }}>
+                <span style={{ color: 'var(--color-nominal)' }}>Successful Requests:</span>
+                <span style={{ fontWeight: 600, color: 'var(--color-nominal)' }}>{simSummary.success} ({simSummary.sent > 0 ? ((simSummary.success / simSummary.sent) * 100).toFixed(1) : 0}%)</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 12px', backgroundColor: 'rgba(239, 68, 68, 0.04)', borderRadius: '8px', border: '1px solid rgba(239, 68, 68, 0.15)', fontSize: '13px' }}>
+                <span style={{ color: 'var(--color-critical)' }}>Throttled (HTTP 429):</span>
+                <span style={{ fontWeight: 600, color: 'var(--color-critical)' }}>{simSummary.throttled} ({simSummary.sent > 0 ? ((simSummary.throttled / simSummary.sent) * 100).toFixed(1) : 0}%)</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 12px', backgroundColor: 'rgba(255,255,255,0.02)', borderRadius: '8px', border: '1px solid var(--border-color)', fontSize: '13px' }}>
+                <span style={{ color: 'var(--text-secondary)' }}>Route Mix Configuration:</span>
+                <span style={{ fontWeight: 600, textTransform: 'capitalize' }}>{simSummary.routeMix}</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 12px', backgroundColor: 'rgba(255,255,255,0.02)', borderRadius: '8px', border: '1px solid var(--border-color)', fontSize: '13px' }}>
+                <span style={{ color: 'var(--text-secondary)' }}>Client Credentials:</span>
+                <span style={{ fontWeight: 600 }}>{simSummary.clientAuth === 'auth' ? 'Authenticated 🔑' : 'Unauthenticated 🌐'}</span>
+              </div>
+            </div>
+
+            <button className="btn-modal-close" onClick={() => setSimSummary(null)} style={{ width: '100%', padding: '10px' }}>
+              Acknowledge & Close
+            </button>
+          </div>
+        </div>
+      )}
+      {/* Toast Notifications */}
+      <div className="toast-container">
+        {toasts.map(toast => (
+          <div key={toast.id} className={`toast-message toast-${toast.type}`}>
+            <span className="toast-icon">
+              {toast.type === 'success' ? '✅' : toast.type === 'error' ? '❌' : 'ℹ️'}
+            </span>
+            <span className="toast-text">{toast.message}</span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
