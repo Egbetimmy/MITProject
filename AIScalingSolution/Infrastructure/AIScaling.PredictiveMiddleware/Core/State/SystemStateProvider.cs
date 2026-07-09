@@ -24,12 +24,21 @@ public sealed class SystemStateProvider : ISystemStateProvider
         }
     }
 
+    private bool _predictiveEngineEnabled = true;
+
+    /// <inheritdoc />
+    public bool PredictiveEngineEnabled
+    {
+        get { lock (_sync) return _predictiveEngineEnabled; }
+        set { lock (_sync) _predictiveEngineEnabled = value; }
+    }
+
     /// <inheritdoc />
     public void SetPosture(ProtectivePosture posture, DateTimeOffset changedAtUtc)
     {
         lock (_sync)
         {
-            _posture = posture;
+            _posture = _predictiveEngineEnabled ? posture : ProtectivePosture.Nominal;
             _postureChangedAtUtc = changedAtUtc;
         }
     }

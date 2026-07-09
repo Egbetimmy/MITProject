@@ -51,6 +51,7 @@ export default function App() {
   const [simTimeLeft, setSimTimeLeft] = useState(0);
   const [simRouteMix, setSimRouteMix] = useState('balanced');
   const [simClientAuth, setSimClientAuth] = useState('unauth');
+  const [predictiveEngineEnabled, setPredictiveEngineEnabled] = useState(true);
   const [simStats, setSimStats] = useState({ sent: 0, success: 0, throttled: 0 });
   const [terminalLogs, setTerminalLogs] = useState([{ time: new Date().toLocaleTimeString(), message: '[SYSTEM] Console initialized. Standing by for traffic simulator...', type: 'system' }]);
   const [mockThrottledCounter, setMockThrottledCounter] = useState(0);
@@ -191,6 +192,9 @@ export default function App() {
         setForecastedRps(data.forecastedRps || 0);
         setThrottledCount(data.throttledRequests || 0);
         setP99Overhead(data.p99OverheadMs || 0);
+        if (data.predictiveEngineEnabled !== undefined) {
+          setPredictiveEngineEnabled(data.predictiveEngineEnabled);
+        }
         
         // Critical status triggers catalog offline view
         if (data.posture === 'Critical') {
@@ -287,8 +291,8 @@ export default function App() {
           {
             label: 'Current RPS',
             data: chartDataRef.current.rps,
-            borderColor: '#3b82f6',
-            backgroundColor: 'rgba(59, 130, 246, 0.04)',
+            borderColor: '#6366f1',
+            backgroundColor: 'rgba(99, 102, 241, 0.04)',
             borderWidth: 2.5,
             tension: 0.3,
             fill: true,
@@ -297,7 +301,7 @@ export default function App() {
           {
             label: 'Forecasted RPS',
             data: chartDataRef.current.forecast,
-            borderColor: '#a855f7',
+            borderColor: '#ec4899',
             backgroundColor: 'transparent',
             borderWidth: 2,
             borderDash: [5, 5],
@@ -313,13 +317,13 @@ export default function App() {
         scales: {
           x: {
             grid: { display: false },
-            ticks: { color: '#64748b', font: { size: 9 } }
+            ticks: { color: '#475569', font: { size: 9 } }
           },
           y: {
             min: 0,
             suggestedMax: 120,
-            grid: { color: 'rgba(255,255,255,0.03)' },
-            ticks: { color: '#64748b', font: { size: 9 } }
+            grid: { color: 'rgba(0, 0, 0, 0.04)' },
+            ticks: { color: '#475569', font: { size: 9 } }
           }
         }
       }
@@ -435,7 +439,7 @@ export default function App() {
     setSimSummary({
       sent: simStatsRef.current.sent,
       success: simStatsRef.current.success,
-      throttled: simStatsRef.current.throttled + mockThrottledCounterRef.current,
+      throttled: simStatsRef.current.throttled,
       durationSeconds: elapsed,
       routeMix: simRouteMix,
       clientAuth: simClientAuth
@@ -453,6 +457,68 @@ export default function App() {
     a.click();
     document.body.removeChild(a);
     showToast('Chart image downloaded!', 'success');
+  };
+
+  const copySummaryReport = () => {
+    if (!simSummary) return;
+    const reportText = `Simulation Summary Report
+---------------------------------
+Duration: ${simSummary.durationSeconds} seconds
+Total Requests Sent: ${simSummary.sent}
+Successful Requests: ${simSummary.success} (${simSummary.sent > 0 ? ((simSummary.success / simSummary.sent) * 100).toFixed(1) : 0}%)
+Throttled (HTTP 429): ${simSummary.throttled} (${simSummary.sent > 0 ? ((simSummary.throttled / simSummary.sent) * 100).toFixed(1) : 0}%)
+Route Mix Configuration: ${simSummary.routeMix}
+Client Credentials: ${simSummary.clientAuth === 'auth' ? 'Authenticated' : 'Unauthenticated'}
+`;
+    navigator.clipboard.writeText(reportText)
+      .then(() => showToast('Report copied to clipboard!', 'success'))
+      .catch(() => showToast('Failed to copy report.', 'error'));
+  };
+
+  const saveSummaryReport = () => {
+    if (!simSummary) return;
+    const reportText = `Simulation Summary Report
+---------------------------------
+Duration: ${simSummary.durationSeconds} seconds
+Total Requests Sent: ${simSummary.sent}
+Successful Requests: ${simSummary.success} (${simSummary.sent > 0 ? ((simSummary.success / simSummary.sent) * 100).toFixed(1) : 0}%)
+Throttled (HTTP 429): ${simSummary.throttled} (${simSummary.sent > 0 ? ((simSummary.throttled / simSummary.sent) * 100).toFixed(1) : 0}%)
+Route Mix Configuration: ${simSummary.routeMix}
+Client Credentials: ${simSummary.clientAuth === 'auth' ? 'Authenticated' : 'Unauthenticated'}
+`;
+    const blob = new Blob([reportText], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `simulation-report-${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showToast('Report saved to file!', 'success');
+  };
+
+  const handleTogglePredictiveMode = async (enabled) => {
+    try {
+      const res = await fetch(`${GATEWAY_URL}/api/config`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ predictiveEngineEnabled: enabled })
+      });
+      if (res.ok) {
+        setPredictiveEngineEnabled(enabled);
+        showToast(
+          enabled 
+            ? 'Predictive Gating enabled. Downstream posture shifts active.' 
+            : 'Static Rate Limiting active. Gateway locked to Nominal posture.', 
+          'info'
+        );
+      } else {
+        showToast('Failed to toggle mitigation mode.', 'error');
+      }
+    } catch (err) {
+      showToast('Network error while toggling mode.', 'error');
+    }
   };
 
   // Add Item to Store Cart
@@ -931,6 +997,19 @@ export default function App() {
                   </div>
                 </div>
 
+                <div className="form-group" style={{ marginBottom: '18px' }}>
+                  <label>Mitigation Strategy</label>
+                  <select 
+                    className="form-select" 
+                    disabled={isSimulatorRunning} 
+                    value={predictiveEngineEnabled ? 'predictive' : 'static'} 
+                    onChange={(e) => handleTogglePredictiveMode(e.target.value === 'predictive')}
+                  >
+                    <option value="predictive">🎯 Predictive Gating (Dynamic Postures)</option>
+                    <option value="static">🔒 Static Rate Limiting (Nominal Locked)</option>
+                  </select>
+                </div>
+
                 {isSimulatorRunning ? (
                   <div style={{ marginTop: '16px' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', marginBottom: '6px' }}>
@@ -961,7 +1040,7 @@ export default function App() {
                 <div className="simulator-status-bar" style={{ marginTop: '20px' }}>
                   <div className="sim-metric">Sent: <span>{simStats.sent}</span></div>
                   <div className="sim-metric success">Success: <span>{simStats.success}</span></div>
-                  <div className="sim-metric throttled">Throttled: <span>{simStats.throttled + mockThrottledCounter}</span></div>
+                  <div className="sim-metric throttled">Throttled: <span>{simStats.throttled}</span></div>
                 </div>
               </div>
             </div>
@@ -1314,7 +1393,16 @@ export default function App() {
               </div>
             </div>
 
-            <button className="btn-modal-close" onClick={() => setSimSummary(null)} style={{ width: '100%', padding: '10px' }}>
+            <div style={{ display: 'flex', gap: '10px', marginTop: '16px' }}>
+              <button className="btn" onClick={copySummaryReport} style={{ flexGrow: 1, padding: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', fontSize: '13px' }}>
+                📋 Copy Report
+              </button>
+              <button className="btn" onClick={saveSummaryReport} style={{ flexGrow: 1, padding: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', fontSize: '13px' }}>
+                💾 Save Report
+              </button>
+            </div>
+
+            <button className="btn-modal-close" onClick={() => setSimSummary(null)} style={{ width: '100%', padding: '10px', marginTop: '10px' }}>
               Acknowledge & Close
             </button>
           </div>

@@ -45,10 +45,21 @@ app.MapGet("/api/diagnostics", (
         forecastedRps = diag.ForecastedRequestsPerSecond,
         throttledRequests = diag.ThrottledRequests,
         p99OverheadMs = diag.P99MiddlewareOverheadMs,
-        lookaheadScores = state.LookaheadMetricScores
+        lookaheadScores = state.LookaheadMetricScores,
+        predictiveEngineEnabled = stateProvider.PredictiveEngineEnabled
     });
+});
+
+app.MapPost("/api/config", (
+    ConfigUpdateDto dto,
+    AIScaling.PredictiveMiddleware.Core.State.ISystemStateProvider stateProvider) =>
+{
+    stateProvider.PredictiveEngineEnabled = dto.PredictiveEngineEnabled;
+    return Results.Ok(new { success = true, predictiveEngineEnabled = stateProvider.PredictiveEngineEnabled });
 });
 
 app.MapReverseProxy();
 app.MapGet("/health", () => Results.Ok(new { status = "healthy", service = "ApiGateway" }));
 app.Run();
+
+public record ConfigUpdateDto(bool PredictiveEngineEnabled);

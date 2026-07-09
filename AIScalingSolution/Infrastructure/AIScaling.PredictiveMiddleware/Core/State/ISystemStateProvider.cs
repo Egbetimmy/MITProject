@@ -19,4 +19,9 @@ public interface ISystemStateProvider
     /// Replaces lookahead metric scores from the analytics engine.
     /// </summary>
     void SetLookaheadMetrics(IReadOnlyList<double> scores, DateTimeOffset evaluatedAtUtc);
+
+    /// <summary>
+    /// Gets or sets whether predictive posture transitions are enabled.
+    /// </summary>
+    bool PredictiveEngineEnabled { get; set; }
 }
