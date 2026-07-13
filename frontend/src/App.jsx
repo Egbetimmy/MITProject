@@ -4,7 +4,22 @@ import { Chart, registerables } from 'chart.js';
 // Register Chart.js modules
 Chart.register(...registerables);
 
-const GATEWAY_URL = 'http://localhost:5000';
+// Automatically bypass ngrok browser warning for all fetch requests
+const originalFetch = window.fetch;
+window.fetch = async (input, init) => {
+  init = init || {};
+  init.headers = init.headers || {};
+  if (init.headers instanceof Headers) {
+    init.headers.set('ngrok-skip-browser-warning', 'true');
+  } else if (Array.isArray(init.headers)) {
+    init.headers.push(['ngrok-skip-browser-warning', 'true']);
+  } else {
+    init.headers['ngrok-skip-browser-warning'] = 'true';
+  }
+  return originalFetch(input, init);
+};
+
+const GATEWAY_URL = 'https://6bf1-102-88-55-18.ngrok-free.app';
 
 export default function App() {
   // Navigation
