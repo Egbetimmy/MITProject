@@ -19,7 +19,26 @@ window.fetch = async (input, init) => {
   return originalFetch(input, init);
 };
 
-const GATEWAY_URL = 'https://6bf1-102-88-55-18.ngrok-free.app';
+const GATEWAY_URL = 'https://9aa1-102-88-55-197.ngrok-free.app';
+
+const DEFAULT_USERS = [
+  { id: 1, name: 'Alice Smith', email: 'alice@example.com' },
+  { id: 2, name: 'Bob Johnson', email: 'bob@example.com' },
+  { id: 3, name: 'Charlie Brown', email: 'charlie@example.com' }
+];
+
+const DEFAULT_PRODUCTS = [
+  { id: 101, name: 'AuraPod Max', price: 299, category: 'Electronics', description: 'Active noise-cancelling premium headphones.' },
+  { id: 102, name: 'AuraWatch Ultra', price: 799, category: 'Wearables', description: 'Rugged smartwatch with outdoor tracking.' },
+  { id: 103, name: 'AuraBook Pro', price: 1999, category: 'Computers', description: 'Next-generation chip for pro workflows.' },
+  { id: 104, name: 'AuraScale Smart', price: 99, category: 'Health', description: 'Bluetooth body metrics tracking.' },
+  { id: 105, name: 'AuraCharge Stand', price: 49, category: 'Accessories', description: 'Magnetic fast-charging wireless hub.' }
+];
+
+const DEFAULT_ORDERS = [
+  { id: 1001, userId: 1, productId: 101, quantity: 1, createdAt: new Date(Date.now() - 3600000).toISOString() },
+  { id: 1002, userId: 2, productId: 103, quantity: 1, createdAt: new Date(Date.now() - 7200000).toISOString() }
+];
 
 export default function App() {
   // Navigation
@@ -43,6 +62,9 @@ export default function App() {
   const [orders, setOrders] = useState([]);
   const [cart, setCart] = useState([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isGatewayOnline, setIsGatewayOnline] = useState(true);
+  const isGatewayOnlineRef = useRef(true);
+  useEffect(() => { isGatewayOnlineRef.current = isGatewayOnline; }, [isGatewayOnline]);
 
   // System Posture Telemetry
   const [systemPosture, setSystemPosture] = useState('Nominal');
@@ -163,8 +185,16 @@ export default function App() {
         const data = await resOrders.json();
         setOrders(data.data || []);
       }
+      setIsGatewayOnline(true);
     } catch (err) {
       console.error('Failed to load explorer CRUD data', err);
+      setIsGatewayOnline(false);
+      
+      // Load fallback mock data so dashboard is interactive offline
+      setUsers(prev => prev.length === 0 ? DEFAULT_USERS : prev);
+      setCurrentUser(prev => prev || DEFAULT_USERS[0]);
+      setProducts(prev => prev.length === 0 ? DEFAULT_PRODUCTS : prev);
+      setOrders(prev => prev.length === 0 ? DEFAULT_ORDERS : prev);
     }
   }, []);
 
@@ -183,8 +213,12 @@ export default function App() {
       }
     } catch (err) {
       console.error('Failed to fetch product catalog', err);
+      setIsGatewayOnline(false);
       if (systemPosture === 'Critical') {
         setIsCatalogOffline(true);
+      } else {
+        setIsCatalogOffline(false);
+        setProducts(prev => prev.length === 0 ? DEFAULT_PRODUCTS : prev);
       }
     }
   }, [systemPosture]);
@@ -194,6 +228,7 @@ export default function App() {
     try {
       const res = await fetch(`${GATEWAY_URL}/api/diagnostics`);
       if (res.ok) {
+        setIsGatewayOnline(true);
         const data = await res.json();
         
         // Posture changes
@@ -233,6 +268,7 @@ export default function App() {
         }
       }
     } catch (err) {
+      setIsGatewayOnline(false);
       // Mock diagnostics fallback if gateway offline (for standalone testing)
       simulateStandaloneDiagnostics();
     }
@@ -393,6 +429,34 @@ export default function App() {
       }
 
       const start = performance.now();
+      
+      // Offline fallback: Run mock browser simulation if backend is offline
+      if (!isGatewayOnlineRef.current) {
+        await new Promise(resolve => setTimeout(resolve, 15 + Math.random() * 20)); // Mock latency
+        const elapsed = Math.round(performance.now() - start);
+        const intensity = simIntensityRef.current;
+        
+        let status = 200;
+        const isClientThrottled = clientAuth === 'unauth' && Math.random() > 0.4 && intensity > 50;
+        const isRouteShedded = !isCritical && intensity > 40 && Math.random() > 0.3;
+
+        if (isClientThrottled || isRouteShedded) {
+          status = 429;
+        } else if (isCritical) {
+          status = 201;
+        }
+
+        if (status === 200 || status === 201 || status === 204) {
+          setSimStats(prev => ({ ...prev, success: prev.success + 1 }));
+          logTerminal(`[MOCK-OK] ${method} ${path} -> ${status} (${elapsed}ms)`, 'success');
+        } else if (status === 429) {
+          setSimStats(prev => ({ ...prev, throttled: prev.throttled + 1 }));
+          logTerminal(`[MOCK-SHED] ${method} ${path} -> 429 Too Many Requests (${elapsed}ms)`, 'error');
+          setMockThrottledCounter(prev => prev + 1);
+        }
+        return;
+      }
+
       try {
         const url = method === 'GET' ? `${GATEWAY_URL}${path}?_cb=${Date.now()}` : `${GATEWAY_URL}${path}`;
         const res = await fetch(url, { method, headers, body });
@@ -514,6 +578,17 @@ Client Credentials: ${simSummary.clientAuth === 'auth' ? 'Authenticated' : 'Unau
   };
 
   const handleTogglePredictiveMode = async (enabled) => {
+    if (!isGatewayOnlineRef.current) {
+      setPredictiveEngineEnabled(enabled);
+      showToast(
+        enabled 
+          ? 'Predictive Gating enabled (Offline Demo Mode).' 
+          : 'Static Rate Limiting active (Offline Demo Mode).', 
+        'info'
+      );
+      return;
+    }
+
     try {
       const res = await fetch(`${GATEWAY_URL}/api/config`, {
         method: 'POST',
@@ -573,6 +648,31 @@ Client Credentials: ${simSummary.clientAuth === 'auth' ? 'Authenticated' : 'Unau
     const orderResults = [];
 
     try {
+      if (!isGatewayOnlineRef.current) {
+        // Offline Mock checkout mode
+        await new Promise(resolve => setTimeout(resolve, 800)); // Simulate roundtrip latency
+        
+        for (const item of cart) {
+          const mockOrder = {
+            id: Math.floor(1000 + Math.random() * 9000),
+            userId: currentUser.id,
+            user: currentUser,
+            productId: item.product.id,
+            product: item.product,
+            quantity: item.quantity,
+            createdAt: new Date().toISOString()
+          };
+          orderResults.push(mockOrder);
+          setOrders(prev => [mockOrder, ...prev]);
+        }
+        
+        setCheckoutSuccess({ transactions: orderResults, user: currentUser });
+        setCart([]);
+        setIsCartOpen(false);
+        showToast('Checkout completed locally (Offline Demo Mode)', 'success');
+        return;
+      }
+
       for (const item of cart) {
         const res = await fetch(`${GATEWAY_URL}/orders`, {
           method: 'POST',
@@ -608,6 +708,15 @@ Client Credentials: ${simSummary.clientAuth === 'auth' ? 'Authenticated' : 'Unau
     e.preventDefault();
     const name = e.target.userName.value;
     const email = e.target.userEmail.value;
+    
+    if (!isGatewayOnlineRef.current) {
+      const newUser = { id: Date.now(), name, email };
+      setUsers(prev => [...prev, newUser]);
+      showToast('User created locally (Offline Demo Mode)', 'success');
+      e.target.reset();
+      return;
+    }
+
     try {
       const res = await fetch(`${GATEWAY_URL}/users`, {
         method: 'POST',
@@ -632,6 +741,18 @@ Client Credentials: ${simSummary.clientAuth === 'auth' ? 'Authenticated' : 'Unau
     const sku = e.target.prodSku.value;
     const price = parseFloat(e.target.prodPrice.value);
     
+    if (!isGatewayOnlineRef.current) {
+      if (systemPosture === 'Critical') {
+        showToast('Request Shedded (429)! Cannot add products while system posture is CRITICAL.', 'error');
+        return;
+      }
+      const newProd = { id: Date.now(), name, sku, price, category: 'Electronics' };
+      setProducts(prev => [...prev, newProd]);
+      showToast('Product created locally (Offline Demo Mode)', 'success');
+      e.target.reset();
+      return;
+    }
+
     try {
       const res = await fetch(`${GATEWAY_URL}/products`, {
         method: 'POST',
@@ -662,6 +783,20 @@ Client Credentials: ${simSummary.clientAuth === 'auth' ? 'Authenticated' : 'Unau
     const productId = parseInt(e.target.orderProductId.value);
     const quantity = parseInt(e.target.orderQuantity.value);
 
+    if (!isGatewayOnlineRef.current) {
+      const mockOrder = {
+        id: Math.floor(1000 + Math.random() * 9000),
+        userId,
+        productId,
+        quantity,
+        createdAt: new Date().toISOString()
+      };
+      setOrders(prev => [mockOrder, ...prev]);
+      showToast('Order created locally (Offline Demo Mode)', 'success');
+      e.target.reset();
+      return;
+    }
+
     try {
       const res = await fetch(`${GATEWAY_URL}/orders`, {
         method: 'POST',
@@ -682,6 +817,13 @@ Client Credentials: ${simSummary.clientAuth === 'auth' ? 'Authenticated' : 'Unau
 
   const handleDeleteUser = async (id) => {
     if (!confirm(`Delete user ${id}?`)) return;
+    
+    if (!isGatewayOnlineRef.current) {
+      setUsers(prev => prev.filter(u => u.id !== id));
+      showToast(`User ${id} deleted locally (Offline Demo Mode)`, 'success');
+      return;
+    }
+
     try {
       await fetch(`${GATEWAY_URL}/users/${id}`, { method: 'DELETE' });
       showToast(`User ${id} deleted successfully!`, 'success');
@@ -693,6 +835,17 @@ Client Credentials: ${simSummary.clientAuth === 'auth' ? 'Authenticated' : 'Unau
 
   const handleDeleteProduct = async (id) => {
     if (!confirm(`Delete product ${id}?`)) return;
+
+    if (!isGatewayOnlineRef.current) {
+      if (systemPosture === 'Critical') {
+        showToast('Request Shedded (429)! Cannot delete products while system posture is CRITICAL.', 'error');
+        return;
+      }
+      setProducts(prev => prev.filter(p => p.id !== id));
+      showToast(`Product ${id} deleted locally (Offline Demo Mode)`, 'success');
+      return;
+    }
+
     try {
       const res = await fetch(`${GATEWAY_URL}/products/${id}`, { method: 'DELETE' });
       if (res.status === 429) {
@@ -709,6 +862,19 @@ Client Credentials: ${simSummary.clientAuth === 'auth' ? 'Authenticated' : 'Unau
   // Load Historical telemetry database logs
   const loadHistoricalMetrics = async () => {
     setMetricsLoading(true);
+    
+    if (!isGatewayOnlineRef.current) {
+      // Create some dummy historical series
+      const mockHistory = Array(15).fill(0).map((_, i) => ({
+        timestamp: new Date(Date.now() - (15 - i) * 60000).toISOString(),
+        cpu: 15 + Math.random() * 45,
+        rps: 10 + Math.sin(i / 2) * 5
+      }));
+      setHistoricalMetrics(mockHistory);
+      setMetricsLoading(false);
+      return;
+    }
+
     try {
       const res = await fetch(`${GATEWAY_URL}/monitoring/metrics`);
       const json = await res.json();
@@ -725,6 +891,17 @@ Client Credentials: ${simSummary.clientAuth === 'auth' ? 'Authenticated' : 'Unau
     setIsTraining(true);
     setMlConsoleLogs(prev => [...prev, { time: new Date().toLocaleTimeString(), message: '[SYSTEM] Compiling latest metrics and refitting regression tree...', type: 'system' }]);
     
+    if (!isGatewayOnlineRef.current) {
+      await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate training
+      setMlConsoleLogs(prev => [
+        ...prev,
+        { time: new Date().toLocaleTimeString(), message: '[OK] Standalone ML.NET training complete', type: 'success' },
+        { time: new Date().toLocaleTimeString(), message: '[SYSTEM] Model weights compiled locally in-memory (Offline Demo Mode).', type: 'success' }
+      ]);
+      setIsTraining(false);
+      return;
+    }
+
     try {
       const res = await fetch(`${GATEWAY_URL}/prediction/predictions/train`, { method: 'POST' });
       const json = await res.json();
