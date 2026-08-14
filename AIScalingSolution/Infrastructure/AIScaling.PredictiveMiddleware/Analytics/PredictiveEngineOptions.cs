@@ -47,4 +47,7 @@ public sealed class PredictiveEngineOptions
 
     /// <summary>Minimum forecast slope (last − first) across the horizon to flag acceleration.</summary>
     public float AccelerationThreshold { get; set; } = 50f;
+
+    /// <summary>If true, bypasses SSA model fitting/prediction and returns a flat projection equal to the latest observed rate.</summary>
+    public bool DisableForecasting { get; set; } = false;
 }

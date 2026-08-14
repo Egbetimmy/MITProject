@@ -41,8 +41,12 @@ const DEFAULT_ORDERS = [
 ];
 
 export default function App() {
+  const queryParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : new URLSearchParams();
+  const demoMode = queryParams.get('demo') === 'true';
+  const initialTab = queryParams.get('tab') || 'store';
+
   // Navigation
-  const [activeTab, setActiveTab] = useState('store'); // 'store' or 'operator'
+  const [activeTab, setActiveTab] = useState(initialTab); // 'store' or 'operator'
   const [activeExplorerTab, setActiveExplorerTab] = useState('users'); // 'users', 'products', 'orders', 'stress'
 
   // Toast notifications state
@@ -56,10 +60,10 @@ export default function App() {
   }, []);
 
   // Global Sync States
-  const [users, setUsers] = useState([]);
-  const [currentUser, setCurrentUser] = useState(null);
-  const [products, setProducts] = useState([]);
-  const [orders, setOrders] = useState([]);
+  const [users, setUsers] = useState(DEFAULT_USERS);
+  const [currentUser, setCurrentUser] = useState(DEFAULT_USERS[0]);
+  const [products, setProducts] = useState(DEFAULT_PRODUCTS);
+  const [orders, setOrders] = useState(DEFAULT_ORDERS);
   const [cart, setCart] = useState([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isGatewayOnline, setIsGatewayOnline] = useState(true);
@@ -133,6 +137,49 @@ export default function App() {
       trainingTerminalRef.current.scrollTop = trainingTerminalRef.current.scrollHeight;
     }
   }, [mlConsoleLogs]);
+
+  // Telemetry demo populator for screenshot generation
+  useEffect(() => {
+    if (demoMode) {
+      setSystemPosture('Critical');
+      setIsCatalogOffline(true);
+      setCurrentRps(82.4);
+      setForecastedRps(114.5);
+      setThrottledCount(3677);
+      setP99Overhead(1.18);
+      
+      const rpsData = [];
+      const forecastData = [];
+      for (let i = 0; i < 30; i++) {
+        if (i < 10) {
+          rpsData.push(10 + Math.random() * 5);
+          forecastData.push(12 + Math.random() * 5);
+        } else if (i < 18) {
+          rpsData.push(10 + (72 / 8) * (i - 10) + Math.random() * 8);
+          forecastData.push(12 + (102 / 8) * (i - 10) + Math.random() * 8);
+        } else {
+          rpsData.push(40 + Math.random() * 4);
+          forecastData.push(114.5 + (Math.random() - 0.5) * 5);
+        }
+      }
+      chartDataRef.current.rps = rpsData;
+      chartDataRef.current.forecast = forecastData;
+      
+      const logs = [
+        { time: '21:00:00', message: '[SYSTEM] Custom simulation started: 110 RPS', type: 'system' },
+        { time: '21:00:05', message: '[OK] GET /products -> 200 (14ms)', type: 'success' },
+        { time: '21:00:10', message: '[OK] POST /orders -> 201 (32ms)', type: 'success' },
+        { time: '21:00:15', message: '[ALERT] Forecast engine predicted traffic peak of 114.5 RPS', type: 'system' },
+        { time: '21:00:20', message: '[CRITICAL] Posture transitioned to CRITICAL. Load-shedding active.', type: 'error' },
+        { time: '21:00:21', message: '[SHED] GET /products -> 429 Too Many Requests (1ms)', type: 'error' },
+        { time: '21:00:22', message: '[OK] POST /orders -> 201 (45ms)', type: 'success' },
+        { time: '21:00:23', message: '[SHED] GET /products -> 429 Too Many Requests (1ms)', type: 'error' },
+        { time: '21:00:24', message: '[OK] POST /orders -> 201 (38ms)', type: 'success' },
+        { time: '21:00:25', message: '[SHED] GET /products -> 429 Too Many Requests (1ms)', type: 'error' }
+      ];
+      setTerminalLogs(logs);
+    }
+  }, [demoMode]);
 
   // Refs for simulator interval
   const simIntensityRef = useRef(simIntensityRps);

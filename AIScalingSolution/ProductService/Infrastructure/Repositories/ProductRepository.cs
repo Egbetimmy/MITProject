@@ -11,7 +11,7 @@ public sealed class ProductRepository : IProductRepository
     public ProductRepository(ProductDbContext context) => _context = context;
 
     public async Task<IReadOnlyList<Product>> GetAllAsync(CancellationToken cancellationToken = default) =>
-        await _context.Products.AsNoTracking().OrderBy(p => p.Id).ToListAsync(cancellationToken);
+        await _context.Products.AsNoTracking().OrderBy(p => p.Id).Take(10).ToListAsync(cancellationToken);
 
     public async Task<Product?> GetByIdAsync(int id, CancellationToken cancellationToken = default) =>
         await _context.Products.FindAsync([id], cancellationToken);

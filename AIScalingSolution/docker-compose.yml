@@ -15,6 +15,11 @@ services:
       timeout: 5s
       retries: 10
       start_period: 30s
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 2G
 
   userservice:
     build:
@@ -28,6 +33,11 @@ services:
       ASPNETCORE_ENVIRONMENT: Production
       ConnectionStrings__DefaultConnection: "Server=sqlserver;Database=UserDb;User Id=sa;Password=Your_strong_Password123;TrustServerCertificate=True;"
       DOTNET_ROLL_FORWARD: Major
+    deploy:
+      resources:
+        limits:
+          cpus: "0.2"
+          memory: 128M
 
   productservice:
     build:
@@ -41,6 +51,11 @@ services:
       ASPNETCORE_ENVIRONMENT: Production
       ConnectionStrings__DefaultConnection: "Server=sqlserver;Database=ProductDb;User Id=sa;Password=Your_strong_Password123;TrustServerCertificate=True;"
       DOTNET_ROLL_FORWARD: Major
+    deploy:
+      resources:
+        limits:
+          cpus: "0.3"
+          memory: 256M
 
   orderservice:
     build:
@@ -54,6 +69,11 @@ services:
       ASPNETCORE_ENVIRONMENT: Production
       ConnectionStrings__DefaultConnection: "Server=sqlserver;Database=OrderDb;User Id=sa;Password=Your_strong_Password123;TrustServerCertificate=True;"
       DOTNET_ROLL_FORWARD: Major
+    deploy:
+      resources:
+        limits:
+          cpus: "0.3"
+          memory: 256M
 
   monitoringservice:
     build:
@@ -73,6 +93,11 @@ services:
       ASPNETCORE_ENVIRONMENT: Production
       ConnectionStrings__DefaultConnection: "Server=sqlserver;Database=MonitoringDb;User Id=sa;Password=Your_strong_Password123;TrustServerCertificate=True;"
       DOTNET_ROLL_FORWARD: Major
+    deploy:
+      resources:
+        limits:
+          cpus: "0.2"
+          memory: 128M
 
   predictionservice:
     build:
@@ -91,6 +116,11 @@ services:
       DOTNET_ROLL_FORWARD: Major
     volumes:
       - ml-models:/app/models
+    deploy:
+      resources:
+        limits:
+          cpus: "0.2"
+          memory: 128M
 
   redis:
     image: redis:7-alpine
@@ -103,6 +133,11 @@ services:
       interval: 5s
       timeout: 3s
       retries: 10
+    deploy:
+      resources:
+        limits:
+          cpus: "0.2"
+          memory: 128M
 
   apigateway:
     build:
@@ -131,6 +166,11 @@ services:
       GatewayIntelligence__MonitoringBaseUrl: http://monitoringservice:8080
       GatewayIntelligence__PredictionBaseUrl: http://predictionservice:8080
       DOTNET_ROLL_FORWARD: Major
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512M
 
 volumes:
   sqlserver-data:

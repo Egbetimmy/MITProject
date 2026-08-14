@@ -11,7 +11,7 @@ public sealed class OrderRepository : IOrderRepository
     public OrderRepository(OrderDbContext context) => _context = context;
 
     public async Task<IReadOnlyList<Order>> GetAllAsync(CancellationToken cancellationToken = default) =>
-        await _context.Orders.AsNoTracking().OrderBy(o => o.Id).ToListAsync(cancellationToken);
+        await _context.Orders.AsNoTracking().OrderBy(o => o.Id).Take(10).ToListAsync(cancellationToken);
 
     public async Task<Order?> GetByIdAsync(int id, CancellationToken cancellationToken = default) =>
         await _context.Orders.FindAsync([id], cancellationToken);

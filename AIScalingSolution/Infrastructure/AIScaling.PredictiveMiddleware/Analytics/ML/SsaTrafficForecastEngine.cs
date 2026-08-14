@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.ML;
@@ -18,6 +21,19 @@ namespace AIScaling.PredictiveMiddleware.Analytics.ML;
 /// The engine is refit periodically (<see cref="PredictiveEngineOptions.RefitEveryNCycles"/>), not on every
 /// one-second tick, to keep CPU on background threads and off the Kestrel pool.
 /// </para>
+/// <para>
+/// <b>Validation Status (Hypothesis 1):</b>
+/// Hypothesis 1 proposed that a non-parametric Singular Spectrum Analysis (SSA) forecasting model would generate 
+/// short-horizon traffic projections with a Mean Absolute Percentage Error (MAPE) below 10%, translating to improved 
+/// p99 latency stability and SLA attainment under burst conditions.
+/// The SSA forecasting engine was integrated into the framework's analytics layer and demonstrated to operate correctly 
+/// during live load testing, detecting traffic surges and triggering posture transitions within one second.
+/// However, formal offline validation of the model's forecast accuracy against the specific MAPE &lt; 10% threshold 
+/// was not completed within the scope of this project's testing phase. No systematic comparison of predicted versus 
+/// realised request-rate values was logged during evaluation runs. Consequently, H1 is considered partially validated: 
+/// the underlying forecasting mechanism was implemented and shown to function correctly in an operational sense, 
+/// but the specific quantitative accuracy criterion has not been empirically confirmed.
+/// </para>
 /// </remarks>
 public sealed class SsaTrafficForecastEngine : IDisposable
 {
@@ -28,6 +44,11 @@ public sealed class SsaTrafficForecastEngine : IDisposable
 
     private TimeSeriesPredictionEngine<TrafficData, TrafficForecast>? _engine;
     private int _cycleCount;
+
+    // Online accuracy tracking buffers
+    private readonly Queue<(int cycle, float forecast)> _pendingForecasts = new();
+    private readonly List<float> _absolutePercentageErrors = new();
+    private readonly List<float> _squaredErrors = new();
 
     public SsaTrafficForecastEngine(
         IOptions<PredictiveEngineOptions> options,
@@ -51,6 +72,15 @@ public sealed class SsaTrafficForecastEngine : IDisposable
 
         lock (_sync)
         {
+            var latestObservation = normalizedSeries[^1];
+
+            if (_options.DisableForecasting)
+            {
+                forecast = Enumerable.Repeat(latestObservation, _options.Horizon).ToArray();
+                _cycleCount++;
+                return true;
+            }
+
             var requiresRefit = _engine is null ||
                                 _cycleCount == 0 ||
                                 (_options.RefitEveryNCycles > 0 &&
@@ -64,11 +94,50 @@ public sealed class SsaTrafficForecastEngine : IDisposable
                 }
             }
 
-            var latestObservation = normalizedSeries[^1];
+            // Evaluate previous lookahead predictions against the actual observed load
+            while (_pendingForecasts.Count > 0 && _pendingForecasts.Peek().cycle <= _cycleCount)
+            {
+                var past = _pendingForecasts.Dequeue();
+                if (past.cycle == _cycleCount)
+                {
+                    var actualVal = latestObservation;
+                    var absErr = Math.Abs(actualVal - past.forecast);
+                    var ape = actualVal > 0.1f ? (absErr / actualVal) * 100f : 0f;
+                    var se = absErr * absErr;
+
+                    _absolutePercentageErrors.Add(ape);
+                    _squaredErrors.Add(se);
+
+                    // Maintain a sliding window of the last 120 cycles
+                    if (_absolutePercentageErrors.Count > 120)
+                    {
+                        _absolutePercentageErrors.RemoveAt(0);
+                        _squaredErrors.RemoveAt(0);
+                    }
+
+                    var mape = _absolutePercentageErrors.Average();
+                    var rmse = Math.Sqrt(_squaredErrors.Average());
+
+                    _logger.LogInformation(
+                        "Online accuracy telemetry: n={Count}, running_MAPE={Mape:F2}%, running_RMSE={Rmse:F2} RPS",
+                        _absolutePercentageErrors.Count,
+                        mape,
+                        rmse);
+                }
+            }
+
             var prediction = _engine!.Predict(new TrafficData { Count = latestObservation });
             forecast = prediction.Forecast?
                 .Take(_options.Horizon)
                 .ToArray();
+
+            // Schedule the lookahead prediction to be evaluated after the horizon duration
+            if (forecast is { Length: > 0 } && forecast.Length >= _options.Horizon)
+            {
+                var targetCycle = _cycleCount + _options.Horizon;
+                var forecastedValue = forecast[_options.Horizon - 1];
+                _pendingForecasts.Enqueue((targetCycle, forecastedValue));
+            }
 
             _cycleCount++;
             return forecast is { Length: > 0 };
