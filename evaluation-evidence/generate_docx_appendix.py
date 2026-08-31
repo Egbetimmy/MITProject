@@ -116,15 +116,15 @@ def main():
     table = doc.add_table(rows=8, cols=4)
     table.style = 'Light Shading Accent 1'
     
-    headers = ["Performance Metric", "Unmitigated Scenario", "Mitigated Scenario", "Metric Improvement"]
+    headers = ["Performance Metric", "Unmitigated Scenario (C1)", "Predictive PMF (C4)", "Metric Difference"]
     data = [
-        ["Peak Simulated Traffic", "120 RPS", "120 RPS", "Baseline Load Match"],
-        ["P99 Gateway Latency", "2,540 ms", "20 ms", "99.2% latency reduction"],
-        ["Critical Route Success Rate", "33.9%", "100.0%", "+195.0% success rate"],
-        ["Non-Critical Success Rate", "33.9%", "0.0% (Graceful Shedding)", "Graceful failure mode"],
-        ["Peak Downstream CPU Usage", "100% (Saturation)", "58% (Safe margins)", "42.0% headroom preserved"],
-        ["Database Connection Pool", "Exhausted (Maxed Out)", "Stable (35% utilization)", "Prevents database deadlock"],
-        ["HTTP 429 Response Format", "Standard IIS/Kestrel text", "Custom JSON payload", "Structured API response"]
+        ["Peak Simulated Traffic", "120 RPS", "120 RPS", "Baseline T3 Load Match"],
+        ["P99 Gateway Latency (Aggregate)", "60.02 s", "39.35 s", "34.4% latency reduction"],
+        ["Completed-Request Latency (P99)", "N/A (12.92% Success)", "12.67 s", "Prevents infinite queue growth"],
+        ["Checkout Success Rate", "12.92%", "52.04%", "+39.12% success rate increase"],
+        ["Catalog Success Rate", "96.72%", "40.90%", "-55.82% (Prioritizes checkout)"],
+        ["Peak Downstream CPU (Gateway)", "32.50%", "24.00%", "26.2% CPU load reduction"],
+        ["Database Connection Pool", "Exhausted (Pool Starvation)", "Stable (No Thread Stalls)", "Prevents database deadlock"]
     ]
     
     # Set headers
@@ -159,7 +159,7 @@ def main():
                     r.font.name = "Calibri"
                     r.font.size = Pt(10)
                     r.font.color.rgb = charcoal_color
-                    if col_idx == 2 and ("100.0%" in cell_value or "20 ms" in cell_value or "58%" in cell_value):
+                    if col_idx == 2 and ("52.04%" in cell_value or "39.35 s" in cell_value or "12.67 s" in cell_value or "24.00%" in cell_value):
                         r.bold = True
                         r.font.color.rgb = RGBColor(13, 148, 136)
                         
@@ -173,7 +173,7 @@ def main():
     r2.bold = True
     r2.font.color.rgb = navy_color
     
-    p_fig1_text = add_paragraph_with_spacing(doc, "Figure A.1 illustrates the gateway's real-time load-shedding response during a 60-second traffic spike. When traffic ramps up past the 60 RPS Alert threshold, the gateway transitions to Critical posture at approximately t=22s, capping unauthenticated traffic and shedding the non-critical routes.", space_after=12)
+    p_fig1_text = add_paragraph_with_spacing(doc, "Figure A.1 shows the throughput and proactive load-shedding response under the T3 Critical Surge. Gating of non-critical routes resolves quickly to preserve transactional checkout availability.", space_after=12)
     
     img1_path = os.path.join(image_dir, "chart_load_shedding.png")
     if os.path.exists(img1_path):
@@ -192,7 +192,7 @@ def main():
     r3.bold = True
     r3.font.color.rgb = navy_color
     
-    p_fig2_text = add_paragraph_with_spacing(doc, "Figure A.2 shows the P99 latency comparison on a logarithmic scale. Under unmitigated conditions, queue delays drive latencies to 2.5 seconds. Active load-shedding keeps latency stable under 20ms.", space_after=12)
+    p_fig2_text = add_paragraph_with_spacing(doc, "Figure A.2 shows the P99 latency comparison. Under unmitigated conditions (C1), queue delays drive aggregate latencies to 60.02 seconds (timeout-censored). Active load-shedding (C4) reduces aggregate P99 latency to 39.35 seconds, with successfully completed checkouts achieving a mean P99 latency of 12.67 seconds.", space_after=12)
     
     img2_path = os.path.join(image_dir, "chart_latency_comparison.png")
     if os.path.exists(img2_path):

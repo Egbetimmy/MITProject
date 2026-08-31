@@ -1,0 +1,150 @@
+================================================================================
+MIT AUTO-SCALING SYSTEM EVALUATION: CHANGES & RESULTS REPORT
+Date: 2026-08-14
+================================================================================
+
+This report documents all codebase updates, infrastructure constraints, smoke-test
+validations, and statistical findings completed during today's unified 60-run
+matrix evaluation of the Predictive Load-Shedding API Gateway.
+
+---
+1. DATABASE SEED SCALE & INFRASTRUCTURE CONSTRAINTS
+---
+* Seed Scale:
+  - Users: 10,000 records
+  - Products: 50,000 records
+  - Orders: 100,000 records
+  - Seed SQL file: c:\Users\Timeyin.egbe\Documents\GitHub\MITProject\scratch\seed.sql
+
+* Resource Constraints Applied (docker-compose.yml):
+  - ApiGateway: cpus: "0.5", memory: 512M
+  - OrderService: cpus: "0.3", memory: 512M
+  - ProductService: cpus: "0.3", memory: 512M
+  - UserService: cpus: "0.3", memory: 512M
+  - aiscaling-sqlserver: cpus: "1.0", memory: 1.5G
+
+---
+2. CODE-LEVEL HARDENING & HARNESS TUNING
+---
+* Downstream Query Pagination (.Take(10)):
+  - Target files:
+    - OrderRepository.cs (line 14)
+    - ProductRepository.cs (line 14)
+  - Change: Appended .Take(10) to GetAllAsync queries. This prevented database
+    connection pool starvation and memory serialization deadlocks under peak load.
+  - Writeup: Added Challenge 4.4 and mitigation details to IMPLEMENTATION_WRITEUP.md.
+
+* Load Harness VU Correction (maxVUs: 3000):
+  - Target files:
+    - smoke_test.js
+    - gateway-microservices-stress.js (lines 30-60)
+  - Change: Raised k6 maxVUs from 150 to 1500 (smoke) and 3000 (main) to ensure
+    open-loop load generation under system stress, eliminating the VU bottleneck
+    that previously biased unmitigated runs.
+
+---
+3. EMPIRICAL RESULTS: MAIN MATRIX (T1 - T4)
+---
+Evaluates the fully mitigated "Both" configuration (SSA + route gating on /products).
+Values are reported as Mean +- Standard Deviation across 10 independent trials.
+
+* T1 (60 RPS Spike | 10 Trials):
+  - P99 Latency: 15,532.54 ms +- 21,659.13 ms (timeout-censored in 2/10 trials)
+  - Checkout Success Rate (orders_ok): 93.15%
+  - Catalog Success Rate (products_ok): 70.52%
+  - Gateway CPU Usage: 27.28%
+  - SQL Server CPU Usage: 17.37%
+  - Throttled Rate (429): 14.74%
+
+* T2 (110 RPS Spike | 10 Trials):
+  - P99 Latency: 22,193.46 ms +- 21,568.51 ms (timeout-censored in 3/10 trials)
+  - Checkout Success Rate (orders_ok): 90.24%
+  - Catalog Success Rate (products_ok): 32.12%
+  - Gateway CPU Usage: 27.41%
+  - SQL Server CPU Usage: 16.99%
+  - Throttled Rate (429): 32.27%
+
+* T3 (120 RPS Spike | 10 Trials):
+  - P99 Latency: 39,347.17 ms +- 27,576.87 ms (timeout-censored in 5/10 trials)
+  - Checkout Success Rate (orders_ok): 52.04%
+  - Catalog Success Rate (products_ok): 40.90%
+  - Gateway CPU Usage: 24.01%
+  - SQL Server CPU Usage: 12.83%
+  - Throttled Rate (429): 29.54%
+
+* T4 (180 RPS Spike | 10 Trials):
+  - P99 Latency: 60,050.97 ms +- 84.59 ms (timeout-censored in 9/10 trials)
+  - Checkout Success Rate (orders_ok): 36.85%
+  - Catalog Success Rate (products_ok): 35.93%
+  - Gateway CPU Usage: 27.04%
+  - SQL Server CPU Usage: 14.80%
+  - Throttled Rate (429): 29.74%
+
+---
+4. LATENCY TIMEOUT-CENSORED DATA VERIFICATION
+---
+* Verification: Raw k6 JSON parses confirm that P99 values at or near 60,000ms
+  are client-side timeout-censored metrics, not actual response times.
+* Evidence: In RUN_T4_1_k6.json:
+  - Aggregate P99 Latency: 60,275.10 ms (representing 100% aborted checkouts).
+  - Successful Request P99 Latency: 4,577.68 ms.
+  - Successful Request Average Latency: 2,437.13 ms.
+* Conclusion: Under saturation, the tail latency is bounded by the client-side
+  60s timeout ceiling, indicating infinite queue growth and service dropouts.
+
+---
+5. ABLATION STUDY RESULTS (T3 Surge, 120 RPS)
+---
+Compares the Both configuration against ablated alternatives across 10 trials each.
+
+* Both (SSA + Gating):
+  - Mean P99 Latency: 39,347.17 ms +- 27,576.87 ms
+  - Checkout Success Rate: 52.04%
+  - Catalog Success Rate: 40.90%
+  - Throttled Rate: 29.54%
+
+* Prediction-Only (Gating Disabled):
+  - Mean P99 Latency: 55,865.66 ms +- 13,124.97 ms
+  - Checkout Success Rate: 0.43%
+  - Catalog Success Rate: 39.65%
+  - Throttled Rate: 19.57%
+
+* Shedding-Only (Forecasting Disabled):
+  - Mean P99 Latency: 55,131.06 ms +- 16,396.90 ms
+  - Checkout Success Rate: 61.55%
+  - Catalog Success Rate: 48.58%
+  - Throttled Rate: 17.11%
+
+---
+6. TRIAL-LEVEL STATISTIONAL SIGNIFICANCE (N=10)
+---
+To prevent pseudoreplication, tests were performed treating each trial run as a
+single data point. All success rate distributions failed Shapiro-Wilk normality
+tests (p < 0.05), requiring the non-parametric Mann-Whitney U test.
+
+* Both vs. Prediction-Only (Gating Ablation):
+  - Welch's t-test: t = 3.3048, p = 0.0091 (Significant)
+  - Mann-Whitney U: U = 82.5, p = 0.0061 (Highly Significant, p < 0.01)
+  - Conclusion: Edge route-gating is required to protect downstream services from
+    total transaction collapse.
+
+* Both vs. Shedding-Only (Forecasting Ablation):
+  - Welch's t-test: t = -0.4564, p = 0.6536 (Not Significant)
+  - Mann-Whitney U: U = 45.5, p = 0.7564 (Not Significant, p > 0.05)
+  - Conclusion: Across a full 120s run, proactive forecasting does not yield a
+    statistically significant macro-level success rate benefit over reactive shedding.
+    Forecasting's utility is localized to reducing transient dropouts at spike onset.
+
+---
+7. IN-PROCESS CO-STARVATION FINDING
+---
+* Finding: Disabling gating in Prediction-Only mode leads to a thread starvation loop.
+* Mechanism: Without gating, all GET/POST requests flow downstream, saturating DB
+  connection pools. This causes 16,347 TaskCanceledExceptions inside the gateway.
+  Handling these exceptions starves the shared .NET thread pool.
+* Impact: Because the forecasting engine runs in-process as an IHostedService background
+  worker, it gets starved of execution slots. Logs reveal that the forecasting loop ran
+  16 times in the first 24s and then halted entirely for the remainder of the run.
+* Recommendation: Out-of-process forecasting execution or mandatory edge gating is
+  necessary to prevent predictive self-defense systems from starving themselves.
+================================================================================

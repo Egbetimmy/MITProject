@@ -1,10 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.ML;
 using Microsoft.ML.Transforms.TimeSeries;
+using Pipelines.Sockets.Unofficial.Arenas;
+using StackExchange.Redis;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Mail;
 
 namespace AIScaling.PredictiveMiddleware.Analytics.ML;
 
@@ -23,16 +26,13 @@ namespace AIScaling.PredictiveMiddleware.Analytics.ML;
 /// </para>
 /// <para>
 /// <b>Validation Status (Hypothesis 1):</b>
-/// Hypothesis 1 proposed that a non-parametric Singular Spectrum Analysis (SSA) forecasting model would generate 
-/// short-horizon traffic projections with a Mean Absolute Percentage Error (MAPE) below 10%, translating to improved 
-/// p99 latency stability and SLA attainment under burst conditions.
-/// The SSA forecasting engine was integrated into the framework's analytics layer and demonstrated to operate correctly 
-/// during live load testing, detecting traffic surges and triggering posture transitions within one second.
-/// However, formal offline validation of the model's forecast accuracy against the specific MAPE &lt; 10% threshold 
-/// was not completed within the scope of this project's testing phase. No systematic comparison of predicted versus 
-/// realised request-rate values was logged during evaluation runs. Consequently, H1 is considered partially validated: 
-/// the underlying forecasting mechanism was implemented and shown to function correctly in an operational sense, 
-/// but the specific quantitative accuracy criterion has not been empirically confirmed.
+//Hypothesis 1 proposed that a non-parametric Singular Spectrum Analysis(SSA) forecasting model would generate short-horizon traffic projections
+//with a Mean Absolute Percentage Error(MAPE) below 10%, translating to improved p99 latency stability and SLA attainment under burst conditions.
+//The SSA forecasting engine was integrated into the framework's analytics layer and demonstrated to operate correctly during live load testing,
+//detecting traffic surges and triggering posture transitions within one second. A logged, systematic comparison of predicted versus realised
+//request-rate values was subsequently analysed offline against historical traffic logs, yielding a measured MAPE of 72.39% (reported in Thesis
+//Section 5.6). Consequently, H1 was empirically disconfirmed at the predefined < 10% threshold: the forecasting mechanism operated correctly and
+//drove posture transitions as designed, but did not meet the specified accuracy criterion.
 /// </para>
 /// </remarks>
 public sealed class SsaTrafficForecastEngine : IDisposable

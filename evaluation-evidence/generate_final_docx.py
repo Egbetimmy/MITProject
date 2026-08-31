@@ -184,15 +184,15 @@ def main():
     table = doc.add_table(rows=8, cols=4)
     table.style = 'Light Shading Accent 1'
     
-    headers = ["Performance Metric", "Unmitigated Scenario", "Mitigated Scenario", "Metric Improvement"]
+    headers = ["Performance Metric", "Unmitigated Scenario (C1)", "Predictive PMF (C4)", "Metric Difference"]
     data = [
         ["Peak Simulated Traffic", "120 RPS", "120 RPS", "Baseline T3 Load Match"],
-        ["P99 Gateway Latency", "2,540 ms", "20 ms", "99.2% latency reduction"],
-        ["Critical Route Success Rate", "33.9%", "100.0%", "+195.0% success rate"],
-        ["Non-Critical Success Rate", "33.9%", "0.0% (Graceful Shedding)", "Graceful failure mode"],
-        ["Peak Downstream CPU Usage", "100% (Saturation)", "58% (Safe margins)", "42.0% headroom preserved"],
-        ["Database Connection Pool", "Exhausted (Maxed Out)", "Stable (35% utilization)", "Prevents database deadlock"],
-        ["HTTP 429 Response Format", "Standard IIS/Kestrel text", "Custom JSON payload", "Structured API response"]
+        ["P99 Gateway Latency (Aggregate)", "60.02 s", "39.35 s", "34.4% latency reduction"],
+        ["Completed-Request Latency (P99)", "N/A (12.92% Success)", "12.67 s", "Prevents infinite queue growth"],
+        ["Checkout Success Rate", "12.92%", "52.04%", "+39.12% success rate increase"],
+        ["Catalog Success Rate", "96.72%", "40.90%", "-55.82% (Prioritizes checkout)"],
+        ["Peak Downstream CPU (Gateway)", "32.50%", "24.00%", "26.2% CPU load reduction"],
+        ["Database Connection Pool", "Exhausted (Pool Starvation)", "Stable (No Thread Stalls)", "Prevents database deadlock"]
     ]
     
     hdr_cells = table.rows[0].cells
@@ -225,7 +225,7 @@ def main():
                     r.font.name = "Calibri"
                     r.font.size = Pt(9.5)
                     r.font.color.rgb = charcoal_color
-                    if col_idx == 2 and ("100.0%" in cell_value or "20 ms" in cell_value or "58%" in cell_value):
+                    if col_idx == 2 and ("52.04%" in cell_value or "39.35 s" in cell_value or "12.67 s" in cell_value or "24.00%" in cell_value):
                         r.bold = True
                         r.font.color.rgb = RGBColor(13, 148, 136)
 
@@ -239,11 +239,11 @@ def main():
     table2 = doc.add_table(rows=4, cols=4)
     table2.style = 'Light Shading Accent 1'
     
-    headers2 = ["Evaluated Vector (Aggregate)", "Unmitigated Baseline (Mean ± SD)", "Mitigated Gateway (Mean ± SD)", "t-Test / Significance"]
+    headers2 = ["Evaluated Vector (Aggregate)", "Unmitigated Baseline C1 (Mean ± SD)", "Predictive PMF C4 (Mean ± SD)", "t-Test / Significance"]
     data2 = [
-        ["P99 Response Latency (ms)", "2,540.0 ± 85.2 ms", "20.0 ± 1.5 ms", "t(18) = -85.6, p < 0.001"],
-        ["Checkout Success Rate (%)", "33.9% ± 2.1%", "100.0% ± 0.0%", "χ²(1) = 1722.6, p < 0.001"],
-        ["Downstream CPU Usage (%)", "98.4% ± 1.2%", "58.2% ± 2.4%", "t(18) = -44.2, p < 0.001"]
+        ["P99 Response Latency (ms)", "60,017.65 ± 3.00 ms", "39,347.17 ± 27,576.87 ms", "t(9.0) = -2.37, p < 0.05"],
+        ["Checkout Success Rate (%)", "12.92% ± 7.76%", "52.04% ± 49.36%", "t(9.4) = 2.48, p < 0.05"],
+        ["Gateway CPU Usage (%)", "32.50% ± 2.71%", "24.00% ± 3.28%", "t(17.4) = -6.30, p < 0.001"]
     ]
     
     hdr_cells2 = table2.rows[0].cells
@@ -276,7 +276,7 @@ def main():
                     r.font.name = "Calibri"
                     r.font.size = Pt(9.5)
                     r.font.color.rgb = charcoal_color
-                    if col_idx == 2 and ("100.0%" in cell_value or "20.0" in cell_value or "58.2%" in cell_value):
+                    if col_idx == 2 and ("52.04%" in cell_value or "39,347.17" in cell_value or "24.00%" in cell_value):
                         r.bold = True
                         r.font.color.rgb = RGBColor(13, 148, 136)
 

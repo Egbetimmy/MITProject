@@ -144,6 +144,8 @@ services:
       context: .
       dockerfile: ApiGateway/Dockerfile
     container_name: apigateway
+    env_file:
+      - .env
     ports:
       - "5000:8080"
     depends_on:
