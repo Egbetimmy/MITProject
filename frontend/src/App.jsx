@@ -476,33 +476,6 @@ export default function App() {
       }
 
       const start = performance.now();
-      
-      // Offline fallback: Run mock browser simulation if backend is offline
-      if (!isGatewayOnlineRef.current) {
-        await new Promise(resolve => setTimeout(resolve, 15 + Math.random() * 20)); // Mock latency
-        const elapsed = Math.round(performance.now() - start);
-        const intensity = simIntensityRef.current;
-        
-        let status = 200;
-        const isClientThrottled = clientAuth === 'unauth' && Math.random() > 0.4 && intensity > 50;
-        const isRouteShedded = !isCritical && intensity > 40 && Math.random() > 0.3;
-
-        if (isClientThrottled || isRouteShedded) {
-          status = 429;
-        } else if (isCritical) {
-          status = 201;
-        }
-
-        if (status === 200 || status === 201 || status === 204) {
-          setSimStats(prev => ({ ...prev, success: prev.success + 1 }));
-          logTerminal(`[MOCK-OK] ${method} ${path} -> ${status} (${elapsed}ms)`, 'success');
-        } else if (status === 429) {
-          setSimStats(prev => ({ ...prev, throttled: prev.throttled + 1 }));
-          logTerminal(`[MOCK-SHED] ${method} ${path} -> 429 Too Many Requests (${elapsed}ms)`, 'error');
-          setMockThrottledCounter(prev => prev + 1);
-        }
-        return;
-      }
 
       try {
         const url = method === 'GET' ? `${GATEWAY_URL}${path}?_cb=${Date.now()}` : `${GATEWAY_URL}${path}`;
