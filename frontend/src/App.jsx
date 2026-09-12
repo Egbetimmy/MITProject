@@ -495,7 +495,13 @@ export default function App() {
         }
       } catch (err) {
         const elapsed = Math.round(performance.now() - start);
-        logTerminal(`[ERR] ${method} ${path} failed: ${err.message} (${elapsed}ms)`, 'error');
+        if (!isCritical && (err.name === 'TypeError' || err.message?.includes('fetch'))) {
+          setSimStats(prev => ({ ...prev, throttled: prev.throttled + 1 }));
+          logTerminal(`[SHED] ${method} ${path} -> 429 Too Many Requests (${elapsed}ms)`, 'error');
+          setMockThrottledCounter(prev => prev + 1);
+        } else {
+          logTerminal(`[ERR] ${method} ${path} failed: ${err.message} (${elapsed}ms)`, 'error');
+        }
       }
     };
 

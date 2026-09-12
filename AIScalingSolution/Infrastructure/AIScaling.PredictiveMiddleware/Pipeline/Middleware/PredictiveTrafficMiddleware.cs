@@ -107,6 +107,10 @@ public sealed class PredictiveTrafficMiddleware
             return;
         }
 
+        context.Response.Headers.AccessControlAllowOrigin = "*";
+        context.Response.Headers.AccessControlAllowHeaders = "*";
+        context.Response.Headers.AccessControlAllowMethods = "*";
+
         context.Response.StatusCode = StatusCodes.Status429TooManyRequests;
         context.Response.ContentType = "application/json";
 
