@@ -19,7 +19,7 @@ window.fetch = async (input, init) => {
   return originalFetch(input, init);
 };
 
-const GATEWAY_URL = 'https://9aa1-102-88-55-197.ngrok-free.app';
+const GATEWAY_URL = 'https://6a38-102-88-169-190.ngrok-free.app';
 
 const DEFAULT_USERS = [
   { id: 1, name: 'Alice Smith', email: 'alice@example.com' },
