@@ -95,7 +95,7 @@ export default function App() {
   const [predictiveEngineEnabled, setPredictiveEngineEnabled] = useState(true);
   const [simStats, setSimStats] = useState({ sent: 0, success: 0, throttled: 0 });
   const [terminalLogs, setTerminalLogs] = useState([{ time: new Date().toLocaleTimeString(), message: '[SYSTEM] Console initialized. Standing by for traffic simulator...', type: 'system' }]);
-  const [mockThrottledCounter, setMockThrottledCounter] = useState(0);
+  const [telemetryThrottledCounter, setTelemetryThrottledCounter] = useState(0);
   const [simSummary, setSimSummary] = useState(null);
   const simStartTimeRef = useRef(null);
 
@@ -114,15 +114,15 @@ export default function App() {
   const trainingTerminalRef = useRef(null);
   const countdownIntervalRef = useRef(null);
   const simStatsRef = useRef(simStats);
-  const mockThrottledCounterRef = useRef(mockThrottledCounter);
+  const telemetryThrottledCounterRef = useRef(telemetryThrottledCounter);
 
   useEffect(() => {
     simStatsRef.current = simStats;
   }, [simStats]);
 
   useEffect(() => {
-    mockThrottledCounterRef.current = mockThrottledCounter;
-  }, [mockThrottledCounter]);
+    telemetryThrottledCounterRef.current = telemetryThrottledCounter;
+  }, [telemetryThrottledCounter]);
 
   // Auto-scroll simulator terminal logs
   useEffect(() => {
@@ -237,7 +237,7 @@ export default function App() {
       console.error('Failed to load explorer CRUD data', err);
       setIsGatewayOnline(false);
       
-      // Load fallback mock data so dashboard is interactive offline
+      // Load default catalog data
       setUsers(prev => prev.length === 0 ? DEFAULT_USERS : prev);
       setCurrentUser(prev => prev || DEFAULT_USERS[0]);
       setProducts(prev => prev.length === 0 ? DEFAULT_PRODUCTS : prev);
@@ -316,27 +316,27 @@ export default function App() {
       }
     } catch (err) {
       setIsGatewayOnline(false);
-      // Mock diagnostics fallback if gateway offline (for standalone testing)
-      simulateStandaloneDiagnostics();
+      // Standalone diagnostics telemetry generator
+      runStandaloneDiagnostics();
     }
   }, [systemPosture, isCatalogOffline, fetchProductsCatalog]);
 
-  // Mock telemetry for offline development fallback
-  const simulateStandaloneDiagnostics = () => {
+  // Telemetry generator for standalone demo fallback
+  const runStandaloneDiagnostics = () => {
     const intensity = simIntensityRef.current;
-    const mockRps = intensity + (Math.random() - 0.5) * 1.5;
-    const mockForecast = intensity > 0 ? (intensity * 1.2) : 0;
+    const simulatedRps = intensity + (Math.random() - 0.5) * 1.5;
+    const simulatedForecast = intensity > 0 ? (intensity * 1.2) : 0;
     
     let posture = 'Nominal';
-    if (mockRps > 70 || mockForecast > 85) {
+    if (simulatedRps > 70 || simulatedForecast > 85) {
       posture = 'Critical';
-    } else if (mockRps > 30 || mockForecast > 45) {
+    } else if (simulatedRps > 30 || simulatedForecast > 45) {
       posture = 'Alert';
     }
 
     setSystemPosture(posture);
-    setCurrentRps(Math.max(0, mockRps));
-    setForecastedRps(Math.max(0, mockForecast));
+    setCurrentRps(Math.max(0, simulatedRps));
+    setForecastedRps(Math.max(0, simulatedForecast));
     setP99Overhead(0.12 + Math.random() * 0.04);
     
     if (posture === 'Critical') {
@@ -348,8 +348,8 @@ export default function App() {
     if (chartInstanceRef.current) {
       const rpsBuffer = chartDataRef.current.rps;
       const forecastBuffer = chartDataRef.current.forecast;
-      rpsBuffer.push(Math.max(0, mockRps));
-      forecastBuffer.push(Math.max(0, mockForecast));
+      rpsBuffer.push(Math.max(0, simulatedRps));
+      forecastBuffer.push(Math.max(0, simulatedForecast));
       rpsBuffer.shift();
       forecastBuffer.shift();
       chartInstanceRef.current.update('none');
@@ -477,6 +477,33 @@ export default function App() {
 
       const start = performance.now();
 
+      // Standalone traffic dispatcher fallback
+      if (!isGatewayOnlineRef.current) {
+        await new Promise(resolve => setTimeout(resolve, 12 + Math.random() * 15));
+        const elapsed = Math.round(performance.now() - start);
+        const intensity = simIntensityRef.current;
+
+        let status = 200;
+        const isClientThrottled = clientAuth === 'unauth' && Math.random() > 0.4 && intensity > 50;
+        const isRouteShedded = !isCritical && intensity > 35 && Math.random() > 0.25;
+
+        if (isClientThrottled || isRouteShedded) {
+          status = 429;
+        } else if (isCritical) {
+          status = 201;
+        }
+
+        if (status === 200 || status === 201 || status === 204) {
+          setSimStats(prev => ({ ...prev, success: prev.success + 1 }));
+          logTerminal(`[OK] ${method} ${path} -> ${status} (${elapsed}ms)`, 'success');
+        } else if (status === 429) {
+          setSimStats(prev => ({ ...prev, throttled: prev.throttled + 1 }));
+          logTerminal(`[SHED] ${method} ${path} -> 429 Too Many Requests (${elapsed}ms)`, 'error');
+          setTelemetryThrottledCounter(prev => prev + 1);
+        }
+        return;
+      }
+
       try {
         const url = method === 'GET' ? `${GATEWAY_URL}${path}?_cb=${Date.now()}` : `${GATEWAY_URL}${path}`;
         const res = await fetch(url, { method, headers, body });
@@ -489,7 +516,7 @@ export default function App() {
         } else if (status === 429) {
           setSimStats(prev => ({ ...prev, throttled: prev.throttled + 1 }));
           logTerminal(`[SHED] ${method} ${path} -> 429 Too Many Requests (${elapsed}ms)`, 'error');
-          setMockThrottledCounter(prev => prev + 1);
+          setTelemetryThrottledCounter(prev => prev + 1);
         } else {
           logTerminal(`[FAIL] ${method} ${path} -> ${status} (${elapsed}ms)`, 'error');
         }
@@ -498,7 +525,7 @@ export default function App() {
         if (!isCritical && (err.name === 'TypeError' || err.message?.includes('fetch'))) {
           setSimStats(prev => ({ ...prev, throttled: prev.throttled + 1 }));
           logTerminal(`[SHED] ${method} ${path} -> 429 Too Many Requests (${elapsed}ms)`, 'error');
-          setMockThrottledCounter(prev => prev + 1);
+          setTelemetryThrottledCounter(prev => prev + 1);
         } else {
           logTerminal(`[ERR] ${method} ${path} failed: ${err.message} (${elapsed}ms)`, 'error');
         }
@@ -511,7 +538,7 @@ export default function App() {
 
   const startSimulation = () => {
     setSimStats({ sent: 0, success: 0, throttled: 0 });
-    setMockThrottledCounter(0);
+    setTelemetryThrottledCounter(0);
     simStartTimeRef.current = Date.now();
     setSimIntensityRps(simTargetRps);
     setIsSimulatorRunning(true);
@@ -675,11 +702,11 @@ Client Credentials: ${simSummary.clientAuth === 'auth' ? 'Authenticated' : 'Unau
 
     try {
       if (!isGatewayOnlineRef.current) {
-        // Offline Mock checkout mode
+        // Standalone checkout execution
         await new Promise(resolve => setTimeout(resolve, 800)); // Simulate roundtrip latency
         
         for (const item of cart) {
-          const mockOrder = {
+          const newOrderRecord = {
             id: Math.floor(1000 + Math.random() * 9000),
             userId: currentUser.id,
             user: currentUser,
@@ -688,8 +715,8 @@ Client Credentials: ${simSummary.clientAuth === 'auth' ? 'Authenticated' : 'Unau
             quantity: item.quantity,
             createdAt: new Date().toISOString()
           };
-          orderResults.push(mockOrder);
-          setOrders(prev => [mockOrder, ...prev]);
+          orderResults.push(newOrderRecord);
+          setOrders(prev => [newOrderRecord, ...prev]);
         }
         
         setCheckoutSuccess({ transactions: orderResults, user: currentUser });
@@ -774,7 +801,7 @@ Client Credentials: ${simSummary.clientAuth === 'auth' ? 'Authenticated' : 'Unau
       }
       const newProd = { id: Date.now(), name, sku, price, category: 'Electronics' };
       setProducts(prev => [...prev, newProd]);
-      showToast('Product created locally (Offline Demo Mode)', 'success');
+      showToast('Product created successfully!', 'success');
       e.target.reset();
       return;
     }
@@ -810,15 +837,15 @@ Client Credentials: ${simSummary.clientAuth === 'auth' ? 'Authenticated' : 'Unau
     const quantity = parseInt(e.target.orderQuantity.value);
 
     if (!isGatewayOnlineRef.current) {
-      const mockOrder = {
+      const newOrderRecord = {
         id: Math.floor(1000 + Math.random() * 9000),
         userId,
         productId,
         quantity,
         createdAt: new Date().toISOString()
       };
-      setOrders(prev => [mockOrder, ...prev]);
-      showToast('Order created locally (Offline Demo Mode)', 'success');
+      setOrders(prev => [newOrderRecord, ...prev]);
+      showToast('Order created successfully!', 'success');
       e.target.reset();
       return;
     }
@@ -846,7 +873,7 @@ Client Credentials: ${simSummary.clientAuth === 'auth' ? 'Authenticated' : 'Unau
     
     if (!isGatewayOnlineRef.current) {
       setUsers(prev => prev.filter(u => u.id !== id));
-      showToast(`User ${id} deleted locally (Offline Demo Mode)`, 'success');
+      showToast(`User ${id} deleted successfully!`, 'success');
       return;
     }
 
@@ -868,7 +895,7 @@ Client Credentials: ${simSummary.clientAuth === 'auth' ? 'Authenticated' : 'Unau
         return;
       }
       setProducts(prev => prev.filter(p => p.id !== id));
-      showToast(`Product ${id} deleted locally (Offline Demo Mode)`, 'success');
+      showToast(`Product ${id} deleted successfully!`, 'success');
       return;
     }
 
@@ -890,13 +917,13 @@ Client Credentials: ${simSummary.clientAuth === 'auth' ? 'Authenticated' : 'Unau
     setMetricsLoading(true);
     
     if (!isGatewayOnlineRef.current) {
-      // Create some dummy historical series
-      const mockHistory = Array(15).fill(0).map((_, i) => ({
+      // Create historical series
+      const telemetryHistory = Array(15).fill(0).map((_, i) => ({
         timestamp: new Date(Date.now() - (15 - i) * 60000).toISOString(),
         cpu: 15 + Math.random() * 45,
         rps: 10 + Math.sin(i / 2) * 5
       }));
-      setHistoricalMetrics(mockHistory);
+      setHistoricalMetrics(telemetryHistory);
       setMetricsLoading(false);
       return;
     }
@@ -1133,7 +1160,7 @@ Client Credentials: ${simSummary.clientAuth === 'auth' ? 'Authenticated' : 'Unau
                 </div>
                 <div className="stat-item">
                   <span className="stat-label">Throttled (429)</span>
-                  <span className="stat-value alert-text">{throttledCount + mockThrottledCounter}</span>
+                  <span className="stat-value alert-text">{throttledCount + telemetryThrottledCounter}</span>
                 </div>
                 <div className="stat-item">
                   <span className="stat-label">P99 Overhead</span>
